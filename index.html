@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Maturity Assessment (DMA)</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8f9fc;--sf:#fff;--sf2:#f1f5f9;--bd:#e2e8f0;--bd2:#cbd5e1;--ac:#2563eb;--ac2:#0891b2;--tx:#0f172a;--mu:#64748b;--ok:#059669;--wn:#d97706;--r:12px}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:12px}
+.sc{display:none;min-height:100vh;flex-direction:column;animation:fi .3s ease}
+.sc.active{display:flex}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hdr{padding:12px 24px;border-bottom:1px solid var(--bd);background:var(--sf);position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.logo{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--mu)}
+.logo span{color:var(--ac)}
+.htitle{flex:1;text-align:center;font-size:13px;font-weight:600}
+.hpct{font-size:12px;color:var(--mu);font-family:'Space Mono',monospace}
+.pw{height:3px;background:var(--bd)}
+.pb{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .5s}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:12px 24px 22px;max-width:980px;margin:0 auto;width:100%}
+.bb{padding:9px 17px;border:1px solid var(--bd);border-radius:var(--r);background:transparent;font-family:'Manrope',sans-serif;font-size:14px;color:var(--mu);cursor:pointer;transition:all .18s}
+.bb:hover{border-color:var(--bd2);color:var(--tx)}
+.bn{padding:9px 24px;background:var(--ac);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .18s}
+.bn:hover{background:#1d4ed8}
+.bn:disabled{opacity:.3;cursor:not-allowed}
+.bw{flex:1;padding:26px 24px;max-width:980px;margin:0 auto;width:100%}
+
+/* START */
+#start-sc{align-items:center;justify-content:center}
+.sw{max-width:500px;width:100%;text-align:center;padding:0 20px}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border:1px solid var(--ac);border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--ac);margin-bottom:20px;font-family:'Space Mono',monospace}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.t1{font-size:27px;font-weight:800;line-height:1.2;margin-bottom:4px}
+.t2{font-size:15px;color:var(--mu);font-weight:500;margin-bottom:16px}
+.sdesc{font-size:14px;color:var(--mu);line-height:1.7;margin-bottom:26px}
+.lbs{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.lb{padding:12px 26px;border:1.5px solid var(--bd);border-radius:var(--r);background:var(--sf);cursor:pointer;font-family:'Manrope',sans-serif;font-size:15px;font-weight:600;color:var(--tx);display:flex;align-items:center;gap:9px;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.lb:hover{border-color:var(--ac);background:#eff6ff}
+.meta{display:flex;gap:16px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
+.mi{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mu)}
+.md{width:6px;height:6px;border-radius:50%}
+.sfooter{font-size:12px;color:var(--bd2);line-height:1.7}
+.sfooter a{color:var(--mu);cursor:pointer}
+.sfooter a:hover{color:var(--ac);text-decoration:underline}
+.adm{font-size:11px;color:var(--bd);cursor:pointer;margin-top:12px;display:block}
+.adm:hover{color:var(--mu)}
+.rn{font-size:12px;color:var(--ok);font-family:'Space Mono',monospace;min-height:16px;margin-top:7px}
+
+/* ABOUT */
+#about-sc{background:var(--bg)}
+.ab{flex:1;padding:32px 24px 48px;max-width:640px;margin:0 auto;width:100%}
+.abk{font-size:13px;color:var(--mu);cursor:pointer;margin-bottom:22px;display:inline-flex;align-items:center;gap:5px}
+.abk:hover{color:var(--ac)}
+.abt{font-size:22px;font-weight:800;margin-bottom:5px}
+.abs2{font-size:12px;color:var(--mu);margin-bottom:24px;font-family:'Space Mono',monospace;letter-spacing:.04em}
+.asec{margin-bottom:22px}
+.asect{font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--mu);margin-bottom:8px;font-family:'Space Mono',monospace}
+.asecx{font-size:14px;line-height:1.75;color:var(--tx)}
+.aref{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:11px 14px;margin-top:7px;font-size:13px;color:var(--mu);line-height:1.6;font-style:italic}
+
+/* ADMIN */
+#adm-sc{background:var(--bg)}
+.admhdr{padding:12px 24px;border-bottom:1px solid var(--bd);background:#1e293b;display:flex;align-items:center;gap:12px}
+.admlogo{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;color:#94a3b8}
+.admlogo span{color:#60a5fa}
+.admtitle{flex:1;text-align:center;font-size:13px;font-weight:600;color:#f1f5f9}
+.admbd{flex:1;padding:18px 24px;max-width:760px;margin:0 auto;width:100%}
+.tabs{display:flex;gap:2px;margin-bottom:14px;background:var(--sf2);border:1px solid var(--bd);border-radius:10px;padding:4px}
+.tab{flex:1;padding:7px;text-align:center;font-size:13px;font-weight:600;color:var(--mu);cursor:pointer;border-radius:8px;transition:all .18s}
+.tab.active{background:var(--sf);color:var(--ac);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tbc{display:none}
+.tbc.active{display:block}
+.ase{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:9px;overflow:hidden}
+.ash{padding:10px 15px;background:var(--sf2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+.ash:hover{background:#e8edf5}
+.asn{font-family:'Space Mono',monospace;font-size:10px;color:var(--ac);letter-spacing:.1em}
+.asname{font-size:14px;font-weight:700;flex:1}
+.asarr{font-size:12px;color:var(--mu)}
+.asb{padding:11px 15px;display:none}
+.asb.open{display:block}
+.qr{display:flex;gap:7px;align-items:flex-start;margin-bottom:6px}
+.qn{font-family:'Space Mono',monospace;font-size:11px;color:var(--mu);padding-top:10px;min-width:20px;flex-shrink:0}
+.qi{flex:1;padding:7px 10px;border:1.5px solid var(--bd);border-radius:8px;font-family:'Manrope',sans-serif;font-size:13px;color:var(--tx);background:var(--bg);resize:vertical;min-height:37px;line-height:1.5}
+.qi:focus{outline:none;border-color:var(--ac);background:var(--sf)}
+.ac3{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:9px;padding:13px 15px}
+.afl{font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--mu);margin-bottom:7px;font-family:'Space Mono',monospace}
+.aor{display:flex;gap:5px;align-items:center;margin-bottom:4px}
+.aoi{flex:1;padding:7px 10px;border:1.5px solid var(--bd);border-radius:8px;font-family:'Manrope',sans-serif;font-size:13px;color:var(--tx);background:var(--bg)}
+.aoi:focus{outline:none;border-color:var(--ac);background:var(--sf)}
+.acts{display:flex;gap:9px;padding:11px 0 0;justify-content:flex-end;align-items:center}
+.bsv{padding:8px 19px;background:var(--ac);border:none;border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer}
+.bsv:hover{background:#1d4ed8}
+.bpr{padding:8px 19px;border:1.5px solid var(--ac);border-radius:var(--r);font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;color:var(--ac);background:transparent;cursor:pointer}
+.bpr:hover{background:#eff6ff}
+.sm{font-size:12px;color:var(--ok);font-family:'Space Mono',monospace;opacity:0;transition:opacity .3s}
+.sm.show{opacity:1}
+
+/* S1 */
+.fg{margin-bottom:14px}
+.fl{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--mu);margin-bottom:6px;font-family:'Space Mono',monospace}
+.ro2{display:flex;flex-direction:column;gap:4px}
+.ro{display:flex;align-items:center;gap:10px;padding:7px 12px;border:1.5px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all .18s;background:var(--sf);font-size:12px;color:var(--tx)}
+.ro:hover{border-color:var(--ac);background:#eff6ff}
+.ro.sel{border-color:var(--ac);background:#eff6ff}
+.rd{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.ro.sel .rd{border-color:var(--ac);background:var(--ac)}
+.rdi{width:6px;height:6px;border-radius:50%;background:#fff;display:none}
+.ro.sel .rdi{display:block}
+
+/* MATRIX — FIXED */
+.mqb{flex:1;padding:18px 24px 6px;max-width:1020px;margin:0 auto;width:100%}
+.mql{font-size:18px;font-weight:800;margin-bottom:4px}
+.mqd{font-size:14px;color:var(--mu);margin-bottom:13px;line-height:1.5}
+.mqp{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.mqpt{font-size:12px;color:var(--mu);font-family:'Space Mono',monospace}
+.mqpw{flex:1;height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
+.mqpb{height:100%;background:var(--ac);border-radius:2px;transition:width .4s}
+.mqpc{font-size:12px;font-weight:700;color:var(--ac);font-family:'Space Mono',monospace}
+/* TABLE WRAP — overflow-x handles narrow screens */
+.twrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bd);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.mt{width:100%;min-width:720px;border-collapse:collapse;background:var(--sf);table-layout:fixed}
+.mt thead tr{background:var(--sf2);border-bottom:1px solid var(--bd)}
+.mt th{padding:9px 6px;font-size:11px;font-weight:600;color:var(--mu);text-align:center;vertical-align:bottom;font-family:'Manrope',sans-serif;line-height:1.3;border-right:1px solid var(--bd)}
+.mt th:last-child{border-right:none}
+.mt th.sc{text-align:left;padding-left:14px;width:52%}
+.mt th.sv{width:9.6%;text-align:center;padding:9px 4px}
+.mt td{padding:0;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);vertical-align:middle}
+.mt td:last-child{border-right:none}
+.mt tr:last-child td{border-bottom:none}
+.mt tr:hover td{background:#f8faff}
+.mt tr.ans td{background:#f0f7ff}
+/* Smaller font in table, bold question text */
+td.qtc{padding:11px 14px;font-size:13px;line-height:1.5;color:var(--tx);font-weight:700}
+.qin{font-family:'Space Mono',monospace;font-size:10px;color:var(--mu);margin-right:7px;font-weight:400}
+td.scc{text-align:center;cursor:pointer;transition:background .15s}
+td.scc:hover{background:#dbeafe}
+td.scc.sel{background:#dbeafe}
+.rb{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd2);display:inline-flex;align-items:center;justify-content:center;transition:all .18s;background:var(--sf)}
+td.scc:hover .rb{border-color:var(--ac)}
+td.scc.sel .rb{border-color:var(--ac);background:var(--ac)}
+.rbd{width:8px;height:8px;border-radius:50%;background:#fff;display:none}
+td.scc.sel .rbd{display:block}
+
+/* S4 */
+.cbo{display:flex;flex-direction:column;gap:4px}
+.cbo2{display:flex;align-items:flex-start;gap:10px;padding:7px 12px;border:1.5px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all .18s;background:var(--sf);font-size:12px}
+.cbo2:hover{border-color:var(--ac);background:#eff6ff}
+.cbo2.sel{border-color:var(--ac);background:#eff6ff}
+.cbb{width:18px;height:18px;border-radius:5px;border:2px solid var(--bd2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.cbo2.sel .cbb{border-color:var(--ac);background:var(--ac)}
+.cbc{font-size:11px;color:#fff;display:none;font-weight:700}
+.cbo2.sel .cbc{display:block}
+.s4h{font-size:11px;color:var(--mu);margin-bottom:9px;font-family:'Space Mono',monospace}
+
+/* RESULT */
+.rb2{flex:1;padding:26px 24px 44px;max-width:680px;margin:0 auto;width:100%}
+.rtag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--ok);margin-bottom:13px}
+.rmain{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:24px;margin-bottom:13px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;overflow:hidden}
+.rmain::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.rscore{font-family:'Space Mono',monospace;font-size:44px;font-weight:700;color:var(--ac);line-height:1;margin-bottom:4px}
+.rslbl{font-size:13px;color:var(--mu);margin-bottom:13px}
+.rbadge{display:inline-block;padding:6px 17px;border-radius:20px;font-size:13px;font-weight:700;letter-spacing:.05em;margin-bottom:7px}
+.lv-Beginner{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.lv-Emerging{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+.lv-Performing{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+.lv-Advancing{background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe}
+.lv-Expert{background:#f0fdf4;color:#059669;border:1px solid #a7f3d0}
+.rdesc{font-size:14px;color:var(--mu);line-height:1.65}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.dc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:13px}
+.dn{font-size:10px;font-weight:700;letter-spacing:.07em;color:var(--mu);margin-bottom:5px}
+.ds{font-family:'Space Mono',monospace;font-size:17px;font-weight:700;margin-bottom:4px}
+.dbw{height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
+.dbar{height:100%;border-radius:2px;transition:width .8s}
+.swc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:13px 17px;margin-bottom:9px}
+.swt{font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--mu);margin-bottom:9px;font-family:'Space Mono',monospace}
+.swi{display:flex;gap:8px;margin-bottom:5px;font-size:12px;line-height:1.5}
+.aic{display:none}
+.ail{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--ac2);margin-bottom:9px;font-family:'Space Mono',monospace}
+.aild{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--mu)}
+.sp{width:16px;height:16px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ait{font-size:14px;color:#1e3a5f;line-height:1.75;white-space:pre-wrap;display:none}
+.rf{font-size:11px;color:var(--mu);text-align:center;margin-top:18px;line-height:1.6}
+.chat-wrap{background:linear-gradient(135deg,#f8faff,#f0fbff);border:0.5px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.chat-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.chat-ai-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);animation:pulse 1.5s infinite}
+.chat-title{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--ac)}
+.chat-context{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.ctx-tag{font-size:9px;padding:2px 7px;border-radius:7px;font-weight:600;background:var(--sf);border:0.5px solid var(--bd)}
+.ctx-hi{color:#2563eb;border-color:#bfdbfe}
+.ctx-lo{color:#dc2626;border-color:#fecaca}
+.ctx-neu{color:var(--mu)}
+.ai-greeting{background:var(--sf);border:0.5px solid var(--bd);border-radius:9px;padding:10px 13px;font-size:12px;line-height:1.6;margin-bottom:10px;color:var(--tx)}
+.chips-lbl{font-size:10px;color:var(--mu);margin-bottom:6px}
+.chips-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.q-chip{background:var(--sf);border:0.5px solid var(--bd);border-radius:14px;padding:5px 11px;font-size:11px;cursor:pointer;transition:all .15s;color:var(--tx);line-height:1.4}
+.q-chip:hover{border-color:var(--ac);background:#eff6ff;color:var(--ac)}
+.q-chip.active{border-color:var(--ac);background:#eff6ff;color:var(--ac)}
+.chat-response{display:none;background:var(--sf);border:0.5px solid var(--bd);border-radius:9px;padding:10px 13px;margin-bottom:8px;font-size:12px;line-height:1.7;color:var(--tx)}
+.chat-response.show{display:block}
+.typing-dots{display:flex;align-items:center;gap:3px;padding:2px 0}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:#94a3b8;animation:tdot .8s infinite}
+.typing-dots span:nth-child(2){animation-delay:.15s}
+.typing-dots span:nth-child(3){animation-delay:.3s}
+@keyframes tdot{0%,80%,100%{transform:scale(1)}40%{transform:scale(1.4)}}
+.chat-input-row{display:flex;gap:7px}
+.chat-input{flex:1;padding:8px 12px;border:0.5px solid var(--bd);border-radius:18px;font-family:'Manrope',sans-serif;font-size:12px;color:var(--tx);background:var(--sf);outline:none}
+.chat-input:focus{border-color:var(--ac)}
+.chat-send{padding:8px 14px;background:var(--ac);border:none;border-radius:18px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;white-space:nowrap}
+.chat-send:hover{background:#1d4ed8}
+.chat-note{font-size:10px;color:var(--mu);text-align:center;margin-top:6px}
+.chat-history{margin-top:12px;border-top:0.5px solid var(--bd);padding-top:10px;display:none}
+.chat-history.has-items{display:block}
+.chat-hist-title{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--mu);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.chat-hist-item{margin-bottom:8px;border-radius:8px;overflow:hidden;border:0.5px solid var(--bd)}
+.chat-hist-q{background:var(--sf2);padding:6px 10px;font-size:11px;font-weight:600;color:var(--tx)}
+.chat-hist-a{background:var(--sf);padding:7px 10px;font-size:11px;color:var(--mu);line-height:1.6}
+.save-chat-btn{font-size:10px;padding:3px 10px;border:0.5px solid var(--ac);border-radius:8px;background:transparent;color:var(--ac);cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600}
+.save-chat-btn:hover{background:#eff6ff}
+.export-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:1.5px solid var(--ac);border-radius:var(--r);background:var(--sf);font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:var(--ac);cursor:pointer;transition:all .18s;margin-bottom:8px}
+.export-btn:hover{background:#eff6ff}
+.export-btn.secondary{border-color:var(--border2);color:var(--mu)}
+.export-btn.secondary:hover{background:var(--sf2);color:var(--tx)}
+@media print{.hdr,.nav,.export-wrap{display:none!important}.sc{min-height:auto}}
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div id="start-sc" class="sc active">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:36px 24px">
+    <div class="sw">
+      <div class="badge"><div class="dot"></div>AI AGENT</div>
+      <div class="t1">Digital Maturity Assessment</div>
+      <div class="t2">for Companies</div>
+      <div class="sdesc">Пройдите опрос и получите оценку цифровой зрелости, анализ сильных и слабых сторон и рекомендации для ИТ-стратегии.<br><br>Complete the survey and receive a digital maturity assessment, strengths &amp; weaknesses analysis, and IT strategy recommendations.</div>
+      <div class="meta">
+        <div class="mi"><div class="md" style="background:var(--ac)"></div><span>~10 min</span></div>
+        <div class="mi"><div class="md" style="background:var(--ac2)"></div><span>Anonymous</span></div>
+        <div class="mi"><div class="md" style="background:var(--ok)"></div><span>AI-powered</span></div>
+      </div>
+      <div class="lbs">
+        <button class="lb" onclick="setLang('ru')"><span>🇷🇺</span><span>Русский</span></button>
+        <button class="lb" onclick="setLang('en')"><span>🇬🇧</span><span>English</span></button>
+      </div>
+      <div class="rn" id="rn"></div>
+      <div class="sfooter"><a onclick="goSc('about-sc')">About the project</a></div>
+      <span class="adm" onclick="goAdm()">⚙ admin</span>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about-sc" class="sc">
+  <div class="ab">
+    <div class="abk" id="about-back" onclick="goSc('start-sc')">← Back</div>
+    <div class="abt" id="about-title">About the project</div>
+    <div class="abs2">Digital Maturity Assessment · AI Agent</div>
+    <div class="asec">
+      <div class="asect" id="about-s1t"></div>
+      <div class="asecx" id="about-s1x"></div>
+    </div>
+    <div class="asec">
+      <div class="asect" id="about-s2t"></div>
+      <div class="asecx" id="about-s2x"></div>
+    </div>
+    <div class="asec">
+      <div class="asect" id="about-s3t"></div>
+      <div class="asecx" id="about-s3x"></div>
+    </div>
+    <div class="asec">
+      <div class="asect" id="about-s4t"></div>
+      <div class="aref" id="about-ref1"></div>
+      <div class="aref" id="about-ref2" style="margin-top:7px"></div>
+    </div>
+    <button class="bn" id="about-btn" onclick="goSc('start-sc')" style="width:100%;margin-top:24px"></button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adm-sc" class="sc">
+  <div class="admhdr">
+    <div class="admlogo">DMA · <span>Admin</span></div>
+    <div class="admtitle">Редактор опросника</div>
+    <button onclick="goSc('start-sc')" style="background:transparent;border:1px solid #475569;color:#94a3b8;padding:5px 13px;border-radius:8px;cursor:pointer;font-size:13px;font-family:Manrope,sans-serif">← Выход</button>
+  </div>
+  <div class="admbd">
+    <div class="tabs">
+      <div class="tab active" onclick="swTab('q')">Вопросы (рус)</div>
+      <div class="tab" onclick="swTab('s1')">Секция 1</div>
+      <div class="tab" onclick="swTab('s4')">Секция 4</div>
+    </div>
+    <div id="tq" class="tbc active"><div id="aqsecs"></div></div>
+    <div id="ts1" class="tbc"><div id="as1b"></div></div>
+    <div id="ts4" class="tbc"><div id="as4b"></div></div>
+    <div class="acts"><span class="sm" id="sm">✓ Сохранено</span><button class="bpr" onclick="prev()">▶ Предпросмотр</button><button class="bsv" onclick="admsave()">Сохранить</button></div>
+  </div>
+</div>
+
+
+<!-- CONSENT -->
+<div id="consent-sc" class="sc">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:36px 24px">
+    <div style="max-width:500px;width:100%;text-align:center;padding:0 20px">
+      <div class="badge" id="consent-badge" style="margin-bottom:20px"></div>
+      <div style="font-size:22px;font-weight:800;margin-bottom:14px" id="consent-title"></div>
+      <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:20px 24px;margin-bottom:28px;text-align:left">
+        <div style="font-size:14px;color:var(--mu);line-height:1.75" id="consent-text"></div>
+      </div>
+      <button class="bn" id="consent-yes" onclick="giveConsent(true)" style="width:100%;margin-bottom:10px"></button>
+      <button class="bb" id="consent-no" onclick="giveConsent(false)" style="width:100%;text-align:center"></button>
+    </div>
+  </div>
+</div>
+
+<!-- S1 -->
+<div id="s1-sc" class="sc">
+  <div class="hdr"><div class="logo">DMA · <span>Digital Maturity</span></div><div class="htitle" id="s1ht"></div><div class="hpct">10%</div></div>
+  <div class="pw"><div class="pb" style="width:10%"></div></div>
+  <div class="bw" id="s1b"></div>
+  <div class="nav"><button class="bb" id="s1bk" onclick="goSc('start-sc')"></button><button class="bn" id="s1nx" onclick="goS2()"></button></div>
+</div>
+<!-- S2 — Technology Level -->
+<div id="s2-sc" class="sc">
+  <div class="hdr"><div class="logo">DMA · <span>Digital Maturity</span></div><div class="htitle" id="s2ht"></div><div class="hpct">12%</div></div>
+  <div class="pw"><div class="pb" style="width:12%"></div></div>
+  <div class="bw" id="s2b" style="max-width:900px"></div>
+  <div class="nav" style="max-width:900px"><button class="bb" id="s2bk" onclick="goSc('s1-sc')"></button><button class="bn" id="s2nx" onclick="goMx(0)"></button></div>
+</div>
+
+
+
+<!-- MATRIX -->
+<div id="mq-sc" class="sc">
+  <div class="hdr"><div class="logo">DMA · <span>Digital Maturity</span></div><div class="htitle" id="mqht"></div><div class="hpct" id="mqpct"></div></div>
+  <div class="pw"><div class="pb" id="mqpb"></div></div>
+  <div class="mqb">
+    <div class="mql" id="mqsl"></div>
+    <div class="mqd" id="mqsd"></div>
+    <div class="mqp">
+      <span class="mqpt" id="mqal"></span>
+      <div class="mqpw"><div class="mqpb" id="mqprog"></div></div>
+      <span class="mqpc" id="mqcnt"></span>
+    </div>
+    <div class="twrap">
+      <table class="mt" id="mt"></table>
+    </div>
+  </div>
+  <div class="nav" style="max-width:1020px">
+    <button class="bb" id="mqbk" onclick="prevMx()"></button>
+    <button class="bn" id="mqnx" onclick="nextMx()" disabled></button>
+  </div>
+</div>
+
+<!-- S4 -->
+<div id="s4-sc" class="sc">
+  <div class="hdr"><div class="logo">DMA · <span>Digital Maturity</span></div><div class="htitle" id="s4ht"></div><div class="hpct">90%</div></div>
+  <div class="pw"><div class="pb" style="width:90%"></div></div>
+  <div class="bw" id="s4b"></div>
+  <div class="nav"><button class="bb" id="s4bk" onclick="goMx(5)"></button><button class="bn" id="s4nx" onclick="calc()"></button></div>
+</div>
+
+<!-- RESULT -->
+<div id="res-sc" class="sc">
+  <div class="hdr"><div class="logo">DMA · <span>Digital Maturity</span></div><div class="htitle" id="rht"></div><div class="hpct">100%</div></div>
+  <div class="pw"><div class="pb" style="width:100%;background:linear-gradient(90deg,var(--ok),var(--ac2))"></div></div>
+  <div class="rb2">
+    <div class="rtag" id="rtag"></div>
+    <div class="rmain">
+      <div class="rscore" id="rsc"></div>
+      <div class="rslbl" id="rsclbl"></div>
+      <div class="rbadge" id="rbadge"></div>
+      <div class="rdesc" id="rdesc"></div>
+    </div>
+    <div class="dg" id="dg"></div>
+    <div class="swc" id="sws"></div>
+    <div class="swc" id="sww" style="margin-bottom:11px"></div>
+    <div id="ait" style="margin-top:8px"></div>
+    <div class="export-wrap" style="margin-top:12px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--mu);margin-bottom:7px" id="save-section-lbl"></div>
+      <button class="export-btn" onclick="exportPDF()" id="btn-export-pdf" style="margin-bottom:7px">
+        <span style="font-size:15px">📄</span> <span id="lbl-pdf"></span>
+      </button>
+      <button class="export-btn" onclick="saveToSheets()" id="btn-export-sheets" style="border-color:#059669;color:#059669">
+        <span style="font-size:15px">📊</span> <span id="lbl-sheets"></span>
+      </button>
+      <div id="sheets-status" style="font-size:11px;text-align:center;margin-top:6px;min-height:16px;color:var(--mu)"></div>
+    </div>
+    <div class="chat-wrap" id="chat-block" style="display:none">
+      <div class="chat-header">
+        <div class="chat-ai-dot"></div>
+        <div class="chat-title" id="chat-title-lbl"></div>
+      </div>
+      <div class="chat-context" id="chat-ctx"></div>
+      <div class="ai-greeting" id="chat-greeting"></div>
+      <div class="chips-lbl" id="chips-lbl"></div>
+      <div class="chips-grid" id="chips-grid"></div>
+      <div class="chat-response" id="chat-resp"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" id="chat-send-btn" onclick="sendChat()"></button>
+      </div>
+      <div class="chat-note" id="chat-note"></div>
+      <div class="chat-history" id="chat-history">
+        <div class="chat-hist-title">
+          <span id="chat-hist-lbl"></span>
+          <button class="save-chat-btn" id="save-chat-btn" onclick="saveChatPDF()"></button>
+        </div>
+        <div id="chat-hist-items"></div>
+      </div>
+    </div>
+    <div style="background:#f0fdf4;border:0.5px solid #a7f3d0;border-radius:10px;padding:14px 16px;margin-top:10px;text-align:center">
+      <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:5px" id="ty-title"></div>
+      <div style="font-size:11px;color:#047857;line-height:1.6" id="ty-text"></div>
+    </div>
+    <div class="rf" style="margin-top:10px">
+      Digital Maturity Assessment · Developed by <strong>Zhanl Mamykova</strong> · <a href="mailto:mamykova2021@gmail.com" style="color:var(--ac);text-decoration:none">mamykova2021@gmail.com</a> · <a onclick="goSc('about-sc')" style="color:var(--ac);cursor:pointer;text-decoration:none">About the project</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const QS=[
+  {d:0,c:'3.1.Q-1',w:0.14},{d:0,c:'3.1.Q-2',w:0.59},{d:0,c:'3.1.Q-3',w:1.62},
+  {d:0,c:'3.1.Q-4',w:9.19},{d:0,c:'3.1.Q-5',w:0.30},{d:0,c:'3.1.Q-6',w:1.04},
+  {d:1,c:'3.2.Q-1',w:2.43},{d:1,c:'3.2.Q-2',w:7.50},{d:1,c:'3.2.Q-3',w:0.43},
+  {d:1,c:'3.2.Q-4',w:0.58},{d:1,c:'3.2.Q-5',w:2.35},{d:1,c:'3.2.Q-6',w:7.99},
+  {d:2,c:'3.3.Q-1',w:0.25},{d:2,c:'3.3.Q-2',w:0.70},{d:2,c:'3.3.Q-3',w:1.08},
+  {d:2,c:'3.3.Q-4',w:7.64},{d:2,c:'3.3.Q-5',w:0.31},
+  {d:3,c:'3.4.Q-1',w:0.69},{d:3,c:'3.4.Q-2',w:1.31},{d:3,c:'3.4.Q-3',w:8.70},{d:3,c:'3.4.Q-4',w:0.30},
+  {d:4,c:'3.5.Q-1',w:1.43},{d:4,c:'3.5.Q-2',w:1.93},{d:4,c:'3.5.Q-3',w:8.81},{d:4,c:'3.5.Q-4',w:0.04},
+  {d:5,c:'3.6.Q-1',w:0.16},{d:5,c:'3.6.Q-2',w:0.96},{d:5,c:'3.6.Q-3',w:2.17},
+  {d:5,c:'3.6.Q-4',w:0.12},{d:5,c:'3.6.Q-5',w:0.43},{d:5,c:'3.6.Q-6',w:0.92},
+  {d:5,c:'3.6.Q-7',w:6.98},{d:5,c:'3.6.Q-8',w:0.28},
+];
+const CL={
+  1:['3.1.Q-1','3.1.Q-5','3.3.Q-1','3.5.Q-4','3.6.Q-1','3.6.Q-4','3.6.Q-8'],
+  2:['3.1.Q-2','3.2.Q-3','3.2.Q-4','3.3.Q-5','3.4.Q-1','3.4.Q-4','3.6.Q-5'],
+  3:['3.1.Q-6','3.3.Q-2','3.3.Q-3','3.4.Q-2','3.5.Q-1','3.6.Q-2','3.6.Q-6'],
+  4:['3.1.Q-3','3.2.Q-1','3.2.Q-5','3.5.Q-2','3.6.Q-3','3.6.Q-7'],
+  5:['3.1.Q-4','3.2.Q-2','3.2.Q-6','3.3.Q-4','3.4.Q-3','3.5.Q-3'],
+};
+const DIMS=[
+  {t:{ru:'Цифровая стратегия',en:'Digital Strategy'},d:{ru:'Оцените, насколько Вы согласны со следующими вопросами о Цифровой стратегии в вашей организации.',en:"Rate your agreement with the following questions about Digital Strategy in your organization."}},
+  {t:{ru:'Организация и лидерство',en:'Organization & Leadership'},d:{ru:'Оцените, насколько Вы согласны со следующими вопросами об Организации и Лидерстве в вашей организации.',en:'Rate your agreement with the following questions about Organization and Leadership in your organization.'}},
+  {t:{ru:'Цифровая культура и компетенции',en:'Culture & Competencies'},d:{ru:'Оцените, насколько Вы согласны со следующими вопросами о Цифровой культуре и Компетенциях в вашей организации.',en:'Rate your agreement with the following questions about Digital Culture and Competencies in your organization.'}},
+  {t:{ru:'Клиенты',en:'Customers'},d:{ru:'Оцените, насколько Вы согласны со следующими вопросами о Клиентах вашей организации.',en:'Rate your agreement with the following questions about Customers in your organization.'}},
+  {t:{ru:'Процессы',en:'Processes'},d:{ru:'Оцените, насколько Вы согласны со следующими вопросами о Процессах в вашей организации.',en:'Rate your agreement with the following questions about Processes in your organization.'}},
+  {t:{ru:'Технологии',en:'Technology'},d:{ru:'Оцените, насколько Вы согласны со следующими вопросами о Технологиях в вашей организации.',en:'Rate your agreement with the following questions about Technology in your organization.'}},
+];
+const T={
+  ru:{bk:'← Назад',nx:'Далее →',fn:'Получить результаты →',s1h:'Секция 1 — Общие сведения об организации',sb:['Полностью не согласен','Не согласен','Нейтрально','Скорее согласен','Полностью согласен'],an:'отвечено',rtag:'✦ РЕЗУЛЬТАТЫ',rsl:'Digital Maturity Assessment',rh:'Ваши результаты',lv:{Beginner:'Начальный',Emerging:'Формирующийся',Performing:'Развивающийся',Advancing:'Продвинутый',Expert:'Эксперт'},ld:{Beginner:'Цифровизация на начальном этапе. Фокус на базовой автоматизации и формировании ИТ-стратегии.',Emerging:'Цифровые инициативы появляются, но носят фрагментарный характер. Необходима системная трансформация.',Performing:'Есть прочная база — важно масштабировать успешные практики цифровой трансформации.',Advancing:'Высокий уровень зрелости. Организация эффективно использует цифровые технологии.',Expert:'Лидер цифровой трансформации. Задаёт стандарты в своей отрасли.'},st:'✦ СИЛЬНЫЕ СТОРОНЫ',wt:'◈ ОБЛАСТИ ДЛЯ РАЗВИТИЯ',al:'◈ РЕКОМЕНДАЦИИ ДЛЯ ИТ-СТРАТЕГИИ · AI',alt:'Генерирую рекомендации...',dn:['Цифровая стратегия','Организация и лидерство','Цифровая культура и компетенции','Клиенты','Процессы','Технологии'],s4h:'Секция 4 — Дополнительные вопросы',bt:'БАРЬЕРЫ ЦИФРОВОЙ ТРАНСФОРМАЦИИ',bh:'Можно выбрать несколько вариантов',dt:'СТИМУЛЫ ЦИФРОВОЙ ТРАНСФОРМАЦИИ',dh:'Можно выбрать несколько вариантов',rv:'✓ Найдены сохранённые ответы',
+    export:{section:'СОХРАНИТЬ РЕЗУЛЬТАТЫ',pdf:'Скачать отчёт PDF',sheets:'Отправить данные в Google Sheets',sheetsOk:'✓ Данные отправлены в таблицу!',sheetsErr:'Настройте Google Sheets (см. инструкцию)',sheetsNA:'Google Sheets не настроен — обратитесь к организатору',txt:'Скачать .txt'},
+    chat:{
+      title:'AI-АГЕНТ · ЗАДАЙТЕ ВОПРОСЫ ПО РЕЗУЛЬТАТАМ',
+      greeting:'Я изучил ваши результаты. Вижу интересные моменты в вашем профиле зрелости. О чём хотите узнать подробнее?',
+      chipsLbl:'Выберите вопрос или напишите свой:',
+      placeholder:'Задайте вопрос агенту...',
+      send:'Спросить →',
+      note:'Агент отвечает на основе ваших данных · Задайте столько вопросов сколько нужно',
+    histLbl:'ИСТОРИЯ КОНСУЛЬТАЦИИ С AI-АГЕНТОМ',
+    saveChatBtn:'⬇ Сохранить консультацию в PDF',
+      chips:[
+        'Почему именно такой балл?',
+        'С чего начать трансформацию?',
+        'Где главные риски?',
+        'Как перейти на следующий уровень?',
+        'Что делать с барьерами?',
+        'Сравни меня с лидерами отрасли',
+        'Как ускорить внедрение технологий?',
+        'Дай план на 6 месяцев',
+        'Как развивать перспективные технологии?',
+        'Покажи мои сильные стороны'
+      ]
+    },
+    ty:{title:'Спасибо за участие!',text:'Ваши ответы помогут развитию исследования цифровой зрелости бизнеса. Надеемся, что результаты и рекомендации будут полезны для развития вашей организации.'},
+    s2h:'Секция 2 — Уровень внедрения технологий',
+    consent:{
+      title:'Согласие на использование данных',
+      text:'Ваши ответы могут быть использованы в анонимном и обобщённом виде для калибровки весовых коэффициентов модели цифровой зрелости в рамках исследовательского проекта. Персональные данные не собираются и не передаются третьим лицам.',
+      yes:'✓ Согласен — продолжить',
+      no:'Не согласен — только пройти опрос',
+      badge:'СОГЛАСИЕ НА УЧАСТИЕ В ИССЛЕДОВАНИИ'
+    },
+    s2desc:'Оцените уровень внедрения технологий в вашей организации по шкале от 1 до 5.',
+    s2scale:['1 — Не используем','2 — Экспериментируем','3 — Частично внедрено','4 — Масштабно внедрено','5 — Лидирующая практика'],
+    s2g1:'Базовые цифровые технологии',
+    s2g2:'Специфичные и возникающие технологии',
+    s2t1:['Cloud','Cybersecurity','Data platforms (хранение, интеграция, обработка)','Data & analytics','Business / process automation','System integration','Digital identification','Mobile'],
+    s2t2:['Predictive analytics','Big Data','ML (включая Computer Vision)','Gen AI','Agentic AI','Blockchain','Robotic process automation (RPA)','IoT','Digital Twins','3D-printing','Industrial Robotics','Drones','XR: AR or VR'],
+    about:{back:'← Назад',title:'О проекте',btn:'← Вернуться к опросу',
+      s1t:'ОБЗОР',s1x:'Этот AI-инструмент оценки разработан в рамках магистерского исследовательского проекта. Он предоставляет организациям структурированную, научно обоснованную оценку цифровой зрелости по шести измерениям: Цифровая стратегия, Организация и лидерство, Цифровая культура и компетенции, Клиенты, Процессы и Технологии.',
+      s2t:'АВТОР',s2x:'<strong>Zhanl Mamykova</strong> (mamykova2021@gmail.com)<br>Магистерский исследовательский проект, выполненный в рамках программы <em>Global Foresight and Technology Management</em> в <strong>Technische Hochschule Ingolstadt</strong> под научным руководством <strong>Prof. Dr.-Ing. Alexander Schönmann</strong>.',
+      s3t:'МЕТОДОЛОГИЯ',s3x:'Модель оценки основана на Digital Maturity Assessment (DMA), предложенной Ladu et al. (2024), которая была выбрана в качестве методологической основы магистерского исследования. В рамках исследования модель была расширена компонентом оценки уровня внедрения цифровых технологий (базовые и новые перспективные технологии) и апробирована на выборке казахстанских организаций из различных отраслей. Для данного AI-агента исследовательская методология была адаптирована для проведения самооценки организации одним респондентом. Алгоритм оценки основан на параметрах, полученных в ходе магистерского исследования. По мере накопления новых данных модель будет периодически уточняться и калиброваться.',
+      s4t:'ИСТОЧНИК',ref1:'Ladu, L., Koch, C., Ashari, P. A., Blind, K., & Castka, P. (2024). Technology adoption and digital maturity in the conformity assessment industry: Empirical evidence from an international study, 77(0160-791X). https://doi.org/10.1016/j.techsoc.2024.102564',ref2:''}},
+  en:{bk:'← Back',nx:'Next →',fn:'Get Results →',s1h:'Section 1 — General Information',sb:['Strongly disagree','Disagree','Neither agree nor disagree','Agree','Strongly agree'],an:'answered',rtag:'✦ RESULTS',rsl:'Digital Maturity Assessment',rh:'Your Results',lv:{Beginner:'Beginner',Emerging:'Emerging',Performing:'Performing',Advancing:'Advancing',Expert:'Expert'},ld:{Beginner:'Digitalization is at an early stage. Focus on basic automation and forming an IT strategy.',Emerging:'Digital initiatives are emerging but fragmented. Systematic transformation is needed.',Performing:'There is a solid foundation — scale successful practices.',Advancing:'High level of digital maturity. The organization effectively uses digital technologies.',Expert:'Digital transformation leader. Sets industry standards.'},st:'✦ STRENGTHS',wt:'◈ AREAS FOR IMPROVEMENT',al:'◈ IT STRATEGY RECOMMENDATIONS · AI',alt:'Generating recommendations...',dn:['Digital Strategy','Organization & Leadership','Culture & Competencies','Customers','Processes','Technology'],s4h:'Section 4 — Additional Questions',bt:'BARRIERS TO DIGITAL TRANSFORMATION',bh:'Select all that apply',dt:'DRIVERS OF DIGITAL TRANSFORMATION',dh:'Select all that apply',rv:'✓ Saved answers found',
+    export:{section:'SAVE RESULTS',pdf:'Download PDF report',sheets:'Send data to Google Sheets',sheetsOk:'✓ Data sent to spreadsheet!',sheetsErr:'Google Sheets not configured (see instructions)',sheetsNA:'Google Sheets not configured — contact organizer',txt:'Download .txt'},
+    chat:{
+      title:'AI AGENT · ASK QUESTIONS ABOUT YOUR RESULTS',
+      greeting:'I have reviewed your results. I can see some interesting patterns in your maturity profile. What would you like to know more about?',
+      chipsLbl:'Select a question or write your own:',
+      placeholder:'Ask the agent a question...',
+      send:'Ask →',
+      note:'The agent responds based on your data · Ask as many questions as you need',
+    histLbl:'AI AGENT CONSULTATION HISTORY',
+    saveChatBtn:'⬇ Save consultation as PDF',
+      chips:[
+        'Why this specific score?',
+        'Where to start transformation?',
+        'What are the main risks?',
+        'How to reach the next level?',
+        'How to deal with my barriers?',
+        'Compare me with industry leaders',
+        'How to accelerate technology adoption?',
+        'Give me a 6-month plan',
+        'How to develop Emerging technologies?',
+        'Show my strengths'
+      ]
+    },
+    ty:{title:'Thank you for your participation!',text:'Your responses contribute to digital maturity research. We hope the results and recommendations will support your organization\'s digital journey.'},
+    s2h:'Section 2 — Technology Adoption Level',
+    consent:{
+      title:'Data Usage Consent',
+      text:'Your responses may be used in anonymous and aggregated form to calibrate the weight coefficients of the digital maturity model as part of a research project. No personal data is collected or shared with third parties.',
+      yes:'✓ I agree — continue',
+      no:'I do not agree — survey only',
+      badge:'RESEARCH PARTICIPATION CONSENT'
+    },
+    s2desc:'Rate the level of technology adoption in your organization on a scale from 1 to 5.',
+    s2scale:['1 — Not used','2 — Experimenting','3 — Partially adopted','4 — Widely adopted','5 — Leading practice'],
+    s2g1:'Basic digital technologies',
+    s2g2:'Specific and emerging technologies',
+    s2t1:['Cloud','Cybersecurity','Data platforms (storage, integration, processing)','Data & analytics','Business / process automation','System integration','Digital identification','Mobile'],
+    s2t2:['Predictive analytics','Big Data','ML (including Computer Vision)','Gen AI','Agentic AI','Blockchain','Robotic process automation (RPA)','IoT','Digital Twins','3D-printing','Industrial Robotics','Drones','XR: AR or VR'],
+    about:{back:'← Back',title:'About the project',btn:'← Back to Survey',
+      s1t:'OVERVIEW',s1x:'This AI-based assessment tool was developed as part of a master\'s research project. It provides organizations with a structured and research-based assessment of digital maturity across six dimensions: Digital Strategy, Organization and Leadership, Digital Culture and Competencies, Customers, Processes, and Technologies.',
+      s2t:'AUTHOR',s2x:'<strong>Zhanl Mamykova</strong> (mamykova2021@gmail.com)<br>Master\'s research project completed within the <em>Global Foresight and Technology Management</em> program at <strong>Technische Hochschule Ingolstadt</strong> under the supervision of <strong>Prof. Dr.-Ing. Alexander Schönmann</strong>.',
+      s3t:'METHODOLOGY',s3x:'The assessment model is based on the Digital Maturity Assessment (DMA) framework proposed by Ladu et al. (2024), which was selected as the methodological foundation of the master\'s research project. As part of the research, the original DMA model was extended with an assessment of digital technology adoption, including both core digital technologies and emerging technologies, and was tested on a sample of organizations from different industries in Kazakhstan. For this AI agent, the research methodology was adapted to support organizational self-assessment by a single respondent. The assessment algorithm is based on parameters derived from the master\'s research. As new responses are collected, the model will be periodically refined and recalibrated.',
+      s4t:'REFERENCE',ref1:'Ladu, L., Koch, C., Ashari, P. A., Blind, K., & Castka, P. (2024). Technology adoption and digital maturity in the conformity assessment industry: Empirical evidence from an international study, 77(0160-791X). https://doi.org/10.1016/j.techsoc.2024.102564',ref2:''}},
+};
+const DEF={
+  ruQ:['Внедрена Цифровая стратегия, на основе которой реализуется Цифровая трансформация.','Цифровая стратегия задокументирована и доведена до сведения всех заинтересованных сторон.','Цифровая стратегия ориентирована на долгосрочную перспективу (10+ лет).','Цифровая стратегия постоянно пересматривается и корректируется.','Разработана Цифровая дорожная карта для достижения целей Цифровой трансформации.','Эффективность Цифровой стратегии измеряется через KPI.','Руководство поддерживает реализацию Цифровой стратегии.','Определены роли, обязанности и ответственность за Цифровую трансформацию.','Осуществляются значительные инвестиции в Цифровую трансформацию.','Цифровые инициативы реализуются совместно с бизнес-подразделениями.','Пилотные Цифровые инициативы доводятся до масштабного внедрения в организации.','Используется практика привлечения внешней экспертизы при реализации Цифровых инициатив.','Имеются необходимые сотрудники и навыки для реализации Цифровой трансформации.','Проводится целенаправленное обучение сотрудников Цифровым компетенциям.','Развивается внутренняя экспертиза ИТ-команды в разработке ИТ-решений и продвинутых цифровых технологиях.','Сотрудники готовы адаптироваться к изменениям, связанным с внедрением Цифровых технологий.','Принимается риск неудачи при реализации новых направлений цифровой деятельности.','Продукты и услуги дополняются Цифровыми сервисами, создающими дополнительную ценность для Клиентов.','Взаимодействие с Клиентами в основном осуществляется через Цифровые каналы (онлайн, мобильные, соцсети).','Клиентские операции автоматизированы с использованием информационных систем.','Данные о Клиентах используются для анализа клиентского поведения и поддержки принятия решений.','Ключевые бизнес-процессы автоматизированы с использованием корпоративных информационных систем.','Ключевые бизнес-процессы интегрированы между подразделениями и уровнями управления.','Осуществляется регулярный мониторинг ключевых бизнес-процессов (прозрачность).','Цифровая трансформация сопровождается заметными изменениями ключевых бизнес-процессов.','ИТ-инфраструктура развернута по on-premise модели.','Используется микросервисная и модульная ИТ-архитектура.','Сотрудники осведомлены о требованиях ИБ, их соблюдение контролируется.','Legacy-системы используются в ключевых бизнес-процессах.','Внедрение новых информационных систем и цифровых технологий носит системный характер.','Сбор, хранение и обработка данных из информационных систем организованы централизованно.','Выстроена практика работы с данными и аналитикой.','Развивается практика продвинутой аналитики (предиктивная и прогнозная).'],
+  enQ:['A Digital Strategy has been implemented, which serves as the basis for Digital Transformation.','The Digital Strategy has been documented and communicated to all stakeholders.','The Digital Strategy is focused on the long-term (10+ years).','The Digital Strategy is constantly reviewed and adjusted.','A Digital Roadmap has been developed to achieve Digital Transformation goals.','The effectiveness of the Digital Strategy is measured through KPIs.','Leader supports the implementation of the Digital Strategy.','Roles, responsibilities, and accountability for Digital Transformation have been defined.','Significant investments are being made in Digital Transformation.','Digital initiatives are implemented in close collaboration with business units.','Pilot digital initiatives are scaled up for implementation across the organization.','External expertise is engaged in the implementation of digital initiatives.','The necessary employees and skills to implement digital transformation are in place.','Targeted training programs are provided to develop employees\' digital competencies.','The IT team\'s internal expertise in developing IT solutions and advanced digital technologies is being developed.','Employees are ready to adapt to changes associated with the introduction of digital technologies.','The risk of failure in the implementation of new areas of digital activity is accepted.','Products and services are complemented by digital services that create additional value for customers.','Interaction with customers is mainly carried out through digital channels (online, mobile, social networks).','Customer operations are automated using information systems.','Customer data is used to analyze customer behavior and support decision-making.','Key business processes are automated using corporate information systems.','Key business processes are integrated across departments and management levels.','Key business processes are monitored regularly (transparency).','Digital transformation is accompanied by significant changes in key business processes.','The IT infrastructure is deployed on-premise.','A microservices and modular IT architecture is used.','Employees are aware of information security requirements, and compliance is monitored.','Legacy systems are used in key business processes.','The implementation of new information systems and digital technologies is systematic.','The collection, storage, and processing of data from information systems is organized centrally.','Data and analytics practices are established.','The practice of advanced analytics (predictive and forecasting) is being developed.'],
+  s1ru:{ind:'Отрасль Вашей организации',indO:['Промышленность (ГМК, Энергетика, Производство, Автопроизводство)','Нефтегазовая','Пищевая промышленность','Финансы / Банковский сектор','ИТ / Телекоммуникации','Транспорт / Логистика','Ритейл','Образование и наука','Здравоохранение / Фармацевтика','Строительство','Другое (укажите)'],sz:'Размер организации по численности сотрудников',szO:['Меньше 100','101–500','501–1000','1001–10 000','Больше 10 000'],ro:'Ваша должность / роль в организации',roO:['Собственник бизнеса','Генеральный директор / первое лицо компании','Топ-менеджер, отвечающий за ИТ и цифровизацию (заместитель генерального директора, член правления)','Директор по ИТ / цифровизации / информационной безопасности / данным','Руководитель ИТ-направления (инфраструктура, разработка, поддержка и сопровождение, ИБ, данные)','Другое (укажите должность)']},
+  s4ru:{bar:['Недостаток финансирования и ресурсов','Недостаток компетенций и ИТ-кадров','Сопротивление изменениям и низкая вовлечённость персонала и бизнеса','Устаревшие ИТ-системы и технологии','Сложности интеграции между разнородными системами и платформами','Низкое качество и разрозненность данных','Бюрократические или регуляторные ограничения','Повышенные требования к кибербезопасности','Другое'],drv:['Поддержка и вовлечённость руководства','Чёткие цели и планы цифрового развития','Выделение ресурсов и финансирования на цифровые инициативы','Развитие внутренних компетенций и экспертизы','Сильная роль ИТ-подразделения в инициировании и реализации изменений','Запросы и ожидания клиентов и бизнес-заказчиков','Использование современных технологий и инструментов разработки','Другое']},
+};
+
+let lang='ru',ans=new Array(33).fill(null),s2t1=new Array(8).fill(null),s2t2=new Array(13).fill(null),s1={ind:null,sz:null,ro:null},s4={bar:[],drv:[]},cur=0,consentGiven=false;
+let ct=JSON.parse(JSON.stringify(DEF));
+const SK='dma_v8c',PK='dma_v8p';
+
+async function sc2(){try{await window.storage.set(SK,JSON.stringify(ct));}catch(e){}}
+async function lc(){try{const r=await window.storage.get(SK);if(r&&r.value)ct=JSON.parse(r.value);}catch(e){}}
+async function sp(){try{await window.storage.set(PK,JSON.stringify({lang,ans,s2t1,s2t2,s1,s4,cur,consentGiven,ts:Date.now()}));}catch(e){}}
+async function lp(){try{const r=await window.storage.get(PK);if(r&&r.value){const d=JSON.parse(r.value);lang=d.lang||'ru';ans=d.ans||new Array(33).fill(null);s2t1=d.s2t1||new Array(8).fill(null);s2t2=d.s2t2||new Array(13).fill(null);s1=d.s1||{ind:null,sz:null,ro:null};s4=d.s4||{bar:[],drv:[]};cur=d.cur||0;consentGiven=d.consentGiven||false;return true;}}catch(e){}return false;}
+async function cp(){try{await window.storage.delete(PK);}catch(e){}}
+
+(async()=>{try{await lc();const sv=await lp();if(sv&&ans.some(a=>a!==null)){const rn=document.getElementById('rn');if(rn)rn.textContent=T[lang].rv;}}catch(e){console.warn('Init error (non-fatal):',e);}})();
+
+function goSc(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='about-sc') renderAbout();
+}
+function renderAbout(){
+  const a=tx().about;
+  document.getElementById('about-back').textContent=a.back;
+  document.getElementById('about-title').textContent=a.title;
+  document.getElementById('about-btn').textContent=a.btn;
+  document.getElementById('about-s1t').textContent=a.s1t;
+  document.getElementById('about-s1x').textContent=a.s1x;
+  document.getElementById('about-s2t').textContent=a.s2t;
+  document.getElementById('about-s2x').innerHTML=a.s2x;
+  document.getElementById('about-s3t').textContent=a.s3t;
+  document.getElementById('about-s3x').textContent=a.s3x;
+  document.getElementById('about-s4t').textContent=a.s4t;
+  const ref1el=document.getElementById('about-ref1');
+  if(ref1el){
+    const doi='https://doi.org/10.1016/j.techsoc.2024.102564';
+    ref1el.innerHTML=a.ref1.replace(doi,`<a href="${doi}" target="_blank" style="color:var(--ac)">${doi}</a>`);
+  }
+  const ref2el=document.getElementById('about-ref2');
+  if(ref2el){ref2el.textContent=a.ref2;ref2el.style.display=a.ref2?'block':'none';}
+}
+function tx(){return T[lang];}
+function dqs(d){return QS.map((q,i)=>({...q,i})).filter(q=>q.d===d);}
+function qt(i){return lang==='ru'?ct.ruQ[i]:ct.enQ[i];}
+
+function goAdm(){lc().then(()=>{renderAdm();goSc('adm-sc');});}
+function swTab(t){document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['q','s1','s4'][i]===t));document.querySelectorAll('.tbc').forEach(el=>el.classList.remove('active'));document.getElementById('t'+t).classList.add('active');}
+function renderAdm(){
+  const ss=[{l:'Цифровая стратегия',f:0,t:6},{l:'Организация и лидерство',f:6,t:12},{l:'Культура и компетенции',f:12,t:17},{l:'Клиенты',f:17,t:21},{l:'Процессы',f:21,t:25},{l:'Технологии',f:25,t:33}];
+  document.getElementById('aqsecs').innerHTML=ss.map((s,si)=>`<div class="ase"><div class="ash" onclick="tog(${si})"><span class="asn">3.${si+1}</span><span class="asname">${s.l}</span><span style="font-size:12px;color:var(--mu)">${s.t-s.f} утв.</span><span class="asarr" id="ar${si}">▶</span></div><div class="asb" id="sb${si}">${Array.from({length:s.t-s.f},(_,j)=>{const idx=s.f+j;return`<div class="qr"><span class="qn">${j+1}.</span><textarea class="qi" id="rq${idx}" rows="2">${ct.ruQ[idx]||''}</textarea></div>`;}).join('')}</div></div>`).join('');
+  const c=ct.s1ru;
+  document.getElementById('as1b').innerHTML=`<div class="ac3"><div class="afl">ОТРАСЛЬ</div><input class="aoi" id="il" value="${c.ind}" style="margin-bottom:7px;width:100%">${c.indO.map((o,i)=>`<div class="aor"><span class="qn">${i+1}.</span><input class="aoi" id="io${i}" value="${o}"></div>`).join('')}</div><div class="ac3"><div class="afl">РАЗМЕР</div><input class="aoi" id="szl" value="${c.sz}" style="margin-bottom:7px;width:100%">${c.szO.map((o,i)=>`<div class="aor"><span class="qn">${i+1}.</span><input class="aoi" id="szo${i}" value="${o}"></div>`).join('')}</div><div class="ac3"><div class="afl">ДОЛЖНОСТЬ</div><input class="aoi" id="rol" value="${c.ro}" style="margin-bottom:7px;width:100%">${c.roO.map((o,i)=>`<div class="aor"><span class="qn">${i+1}.</span><input class="aoi" id="roo${i}" value="${o}"></div>`).join('')}</div>`;
+  const s=ct.s4ru;
+  document.getElementById('as4b').innerHTML=`<div class="ac3"><div class="afl">БАРЬЕРЫ</div>${s.bar.map((o,i)=>`<div class="aor"><span class="qn">${i+1}.</span><input class="aoi" id="br${i}" value="${o}"></div>`).join('')}</div><div class="ac3"><div class="afl">СТИМУЛЫ</div>${s.drv.map((o,i)=>`<div class="aor"><span class="qn">${i+1}.</span><input class="aoi" id="dr${i}" value="${o}"></div>`).join('')}</div>`;
+}
+function tog(i){const b=document.getElementById('sb'+i);const a=document.getElementById('ar'+i);const op=b.classList.toggle('open');a.textContent=op?'▼':'▶';}
+async function admsave(){
+  for(let i=0;i<33;i++){const el=document.getElementById('rq'+i);if(el)ct.ruQ[i]=el.value.trim();}
+  ct.s1ru.ind=document.getElementById('il')?.value||ct.s1ru.ind;
+  ct.s1ru.indO=ct.s1ru.indO.map((_,i)=>document.getElementById('io'+i)?.value||_);
+  ct.s1ru.sz=document.getElementById('szl')?.value||ct.s1ru.sz;
+  ct.s1ru.szO=ct.s1ru.szO.map((_,i)=>document.getElementById('szo'+i)?.value||_);
+  ct.s1ru.ro=document.getElementById('rol')?.value||ct.s1ru.ro;
+  ct.s1ru.roO=ct.s1ru.roO.map((_,i)=>document.getElementById('roo'+i)?.value||_);
+  ct.s4ru.bar=ct.s4ru.bar.map((_,i)=>document.getElementById('br'+i)?.value||_);
+  ct.s4ru.drv=ct.s4ru.drv.map((_,i)=>document.getElementById('dr'+i)?.value||_);
+  await sc2();const m=document.getElementById('sm');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2500);
+}
+function prev(){admsave().then(()=>{lang='ru';goSc('s1-sc');renderS1();});}
+
+async function setLang(l){
+  lang=l;await lc();
+  const sv=await lp();
+  if(sv&&ans.some(a=>a!==null)){document.getElementById('rn').textContent=T[lang].rv;}
+  renderConsent();goSc('consent-sc');
+}
+function renderConsent(){
+  const c=tx().consent;
+  document.getElementById('consent-badge').textContent=c.badge;
+  document.getElementById('consent-title').textContent=c.title;
+  document.getElementById('consent-text').textContent=c.text;
+  document.getElementById('consent-yes').textContent=c.yes;
+  document.getElementById('consent-no').textContent=c.no;
+}
+function giveConsent(v){
+  consentGiven=v;sp();
+  goSc('s1-sc');renderS1();
+}
+
+function goS2(){goSc('s2-sc');renderS2();}
+function renderS2(){
+  const t=tx();
+  document.getElementById('s2ht').textContent=t.s2h;
+  document.getElementById('s2bk').textContent=t.bk;
+  document.getElementById('s2nx').textContent=t.nx;
+  const mkTable=(group,items,arr,prefix)=>{
+    const rows=items.map((item,i)=>`
+      <tr>
+        <td style="padding:10px 14px;font-size:13px;font-weight:600;color:var(--tx);border-right:1px solid var(--bd);width:42%">${item}</td>
+        ${[1,2,3,4,5].map(v=>`<td style="text-align:center;cursor:pointer;border-right:1px solid var(--bd);transition:background .15s;${arr[i]===v?'background:#dbeafe;':''}" onclick="selS2('${prefix}',${i},${v},this)" data-v="${v}">
+          <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${arr[i]===v?'var(--ac)':'var(--bd2)'};background:${arr[i]===v?'var(--ac)':'var(--sf)'};display:inline-flex;align-items:center;justify-content:center;margin:10px auto">
+            <div style="width:7px;height:7px;border-radius:50%;background:#fff;display:${arr[i]===v?'block':'none'}"></div>
+          </div>
+        </td>`).join('')}
+      </tr>`).join('');
+    return `
+      <div style="font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--mu);margin:20px 0 10px;font-family:'Space Mono',monospace">${group}</div>
+      <div style="overflow-x:auto;border-radius:var(--r);border:1px solid var(--bd);box-shadow:0 1px 4px rgba(0,0,0,.05)">
+      <table style="width:100%;min-width:680px;border-collapse:collapse;background:var(--sf)">
+        <thead><tr style="background:var(--sf2);border-bottom:1px solid var(--bd)">
+          <th style="text-align:left;padding:9px 14px;font-size:11px;font-weight:600;color:var(--mu);border-right:1px solid var(--bd);width:42%">${lang==='ru'?'Технология':'Technology'}</th>
+          ${t.s2scale.map(s=>`<th style="text-align:center;padding:9px 4px;font-size:10px;font-weight:600;color:var(--mu);border-right:1px solid var(--bd);line-height:1.3">${s}</th>`).join('')}
+        </tr></thead>
+        <tbody id="s2tbody-${prefix}">${rows}</tbody>
+      </table></div>`;
+  };
+  document.getElementById('s2b').innerHTML=`
+    <div style="font-size:14px;color:var(--mu);margin-bottom:18px;line-height:1.5">${t.s2desc}</div>
+    ${mkTable(t.s2g1,t.s2t1,s2t1,'t1')}
+    ${mkTable(t.s2g2,t.s2t2,s2t2,'t2')}
+  `;
+}
+function selS2(prefix,idx,v,cell){
+  if(prefix==='t1') s2t1[idx]=v; else s2t2[idx]=v;
+  const tbody=cell.closest('tbody');
+  const row=cell.closest('tr');
+  row.querySelectorAll('td:not(:first-child)').forEach((td,ci)=>{
+    const val=ci+1;
+    td.style.background=val===v?'#dbeafe':'';
+    const dot=td.querySelector('div');
+    const inner=dot?.querySelector('div');
+    if(dot){dot.style.border=`2px solid ${val===v?'var(--ac)':'var(--bd2)'}`;dot.style.background=val===v?'var(--ac)':'var(--sf)';}
+    if(inner){inner.style.display=val===v?'block':'none';}
+  });
+  sp();
+}
+
+function renderS1(){
+  const t=tx();
+  const c=lang==='ru'?ct.s1ru:{ind:"Your organization's industry",indO:['IT / Telecommunications','Finance / Banking','Industry (Mining and Metallurgical Complex, Energy, Manufacturing, Automotive)','Oil and Gas','Food Industry','Agriculture','Construction','Retail','Transportation / Logistics','Education & Science','Healthcare / Pharmacy','Other (specify)'],sz:'Organization size by number of employees',szO:['Less than 100','101–500','501–1000','1001–10,000','More than 10,000'],ro:'Your position / role in the organization',roO:['Business Owner','CEO / Chief Executive','Top Manager Responsible for IT and Digitalization (Deputy CEO, Member of the Management Board)','Director of IT / Digitalization / Information Security / Data','Head of IT (Infrastructure, Development, Support and Maintenance, Information Security, Data)','Other (specify position)']};
+  document.getElementById('s1ht').textContent=t.s1h;
+  document.getElementById('s1bk').textContent=t.bk;
+  document.getElementById('s1nx').textContent=t.nx;
+  document.getElementById('s1b').innerHTML=`${mf('ind',c.ind,c.indO,'ind')}${mf('sz',c.sz,c.szO,'sz')}${mf('ro',c.ro,c.roO,'ro')}`;
+  ['ind','sz','ro'].forEach(k=>{if(s1[k]!==null){const els=document.getElementById('s1b').querySelectorAll(`[data-k="${k}"]`);if(els[s1[k]])els[s1[k]].classList.add('sel');}});
+}
+function mf(id,label,opts,key){return `<div class="fg"><div class="fl">${label}</div><div class="ro2">${opts.map((o,i)=>`<div class="ro" data-k="${key}" onclick="ss('${key}',${i},this)"><div class="rd"><div class="rdi"></div></div>${o}</div>`).join('')}</div></div>`;}
+function ss(k,i,el){s1[k]=i;el.parentElement.querySelectorAll('.ro').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');sp();}
+
+function goMx(d){cur=d;sp();renderMx(d);goSc('mq-sc');}
+function renderMx(d){
+  const t=tx();const dim=DIMS[d];const qs=dqs(d);
+  document.getElementById('mqht').textContent=dim.t[lang];
+  document.getElementById('mqsl').textContent=dim.t[lang];
+  document.getElementById('mqsd').textContent=dim.d[lang];
+  document.getElementById('mqbk').textContent=t.bk;
+  document.getElementById('mqnx').textContent=d===5?t.fn:t.nx;
+  const pct=Math.round(15+((d+1)/6)*75);
+  document.getElementById('mqpb').style.width=pct+'%';
+  document.getElementById('mqpct').textContent=pct+'%';
+  const sb=t.sb;
+  const colgroup=`<colgroup><col style='width:50%'>${[1,2,3,4,5].map(()=>`<col style='width:10%'>`).join('')}</colgroup>`;
+  const thRow=`<thead><tr><th style='text-align:left;padding:9px 14px;font-size:11px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);background:var(--sf2)'>${lang==='ru'?'Вопрос':'Question'}</th>${sb.map(s=>`<th style='text-align:center;padding:8px 4px;font-size:11px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);background:var(--sf2);line-height:1.3;vertical-align:bottom'>${s}</th>`).join('')}</tr></thead>`;
+  const tbody='<tbody>'+qs.map((q,ri)=>`<tr id='row${q.i}' style='${ans[q.i]!==null?'background:#f0f7ff':''}'><td style='padding:12px 14px;font-size:13px;font-weight:700;color:var(--tx);border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);line-height:1.5;vertical-align:middle'><span style='font-family:monospace;font-size:10px;color:var(--mu);margin-right:7px'>${ri+1}.</span>${qt(q.i)}</td>${[1,2,3,4,5].map(v=>`<td style='text-align:center;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);cursor:pointer;vertical-align:middle;${ans[q.i]===v?'background:#dbeafe':''}' onclick='selA(${q.i},${v},this)' data-v='${v}'><div style='width:22px;height:22px;border-radius:50%;border:2px solid ${ans[q.i]===v?'var(--ac)':'var(--bd2)'};background:${ans[q.i]===v?'var(--ac)':'var(--sf)'};display:inline-flex;align-items:center;justify-content:center;margin:9px auto'><div style='width:8px;height:8px;border-radius:50%;background:#fff;display:${ans[q.i]===v?'block':'none'}'></div></div></td>`).join('')}</tr>`).join('')+'</tbody>';
+  document.getElementById('mt').innerHTML=colgroup+thRow+tbody;
+  updP(d);
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function selA(qi,v){
+  ans[qi]=v;
+  const row=document.getElementById('row'+qi);
+  row.style.background='#f0f7ff';
+  row.querySelectorAll('td:not(:first-child)').forEach((td,i)=>{
+    const val=i+1;
+    td.style.background=val===v?'#dbeafe':'';
+    const circ=td.querySelector('div');
+    const dot=circ&&circ.querySelector('div');
+    if(circ){circ.style.border=`2px solid ${val===v?'var(--ac)':'var(--bd2)'}`;circ.style.background=val===v?'var(--ac)':'var(--sf)';}
+    if(dot){dot.style.display=val===v?'block':'none';}
+  });
+  updP(cur);sp();
+}
+function updP(d){
+  const t=tx();const qs=dqs(d);const a=qs.filter(q=>ans[q.i]!==null).length;const tot=qs.length;
+  document.getElementById('mqprog').style.width=Math.round(a/tot*100)+'%';
+  document.getElementById('mqcnt').textContent=`${a}/${tot}`;
+  document.getElementById('mqal').textContent=t.an;
+  document.getElementById('mqnx').disabled=a<tot;
+}
+function nextMx(){if(cur<5){cur++;renderMx(cur);goSc('mq-sc');}else{renderS4();goSc('s4-sc');}}
+function prevMx(){if(cur===0){goSc('s1-sc');renderS1();}else{cur--;renderMx(cur);goSc('mq-sc');}}
+
+function renderS4(){
+  const t=tx();
+  const bars=lang==='ru'?ct.s4ru.bar:['Lack of funding and resources','Lack of skills and IT personnel','Resistance to change and low employee and business engagement','Outdated IT systems and technologies','Difficulty integrating disparate systems and platforms','Poor data quality and fragmentation','Bureaucratic or regulatory restrictions','Increased cybersecurity requirements','Other (specify)'];
+  const drvs=lang==='ru'?ct.s4ru.drv:['Management support and engagement','Clear goals and plans for digital development','Allocation of resources and funding to digital initiatives','Development of internal competencies and expertise','A strong role for the IT department in initiating and implementing change','Customer and business customer requests and expectations','Use of modern technologies and development tools','Other (specify)'];
+  document.getElementById('s4ht').textContent=t.s4h;
+  document.getElementById('s4bk').textContent=t.bk;
+  document.getElementById('s4nx').textContent=t.fn;
+  document.getElementById('s4b').innerHTML=`<div class="fg"><div class="fl">${t.bt}</div><div class="s4h">${t.bh}</div><div class="cbo">${bars.map((o,i)=>`<div class="cbo2 ${s4.bar.includes(i)?'sel':''}" onclick="togCb('bar',${i},this)"><div class="cbb"><span class="cbc">✓</span></div><span>${o}</span></div>`).join('')}</div></div><div class="fg"><div class="fl">${t.dt}</div><div class="s4h">${t.dh}</div><div class="cbo">${drvs.map((o,i)=>`<div class="cbo2 ${s4.drv.includes(i)?'sel':''}" onclick="togCb('drv',${i},this)"><div class="cbb"><span class="cbc">✓</span></div><span>${o}</span></div>`).join('')}</div></div>`;
+}
+function togCb(f,i,el){const a=s4[f];const p=a.indexOf(i);if(p>=0)a.splice(p,1);else a.push(i);el.classList.toggle('sel',a.includes(i));sp();}
+
+function calc(){
+  goSc('res-sc');const t=tx();
+  const ds=[];
+  for(let d=0;d<6;d++){const qs=dqs(d);let ws=0,wn=0,wx=0;qs.forEach(q=>{ws+=ans[q.i]*q.w;wn+=q.w;wx+=5*q.w;});ds.push(Math.round((1+4*(ws-wn)/(wx-wn))*100)/100);}
+  let as=0,an2=0,ax=0;QS.forEach((q,i)=>{as+=ans[i]*q.w;an2+=q.w;ax+=5*q.w;});
+  const pm=1+4*(as-an2)/(ax-an2);
+  let cm=1;for(let c=1;c<=5;c++){const it=CL[c];const ix=it.map(code=>QS.findIndex(q=>q.c===code)).filter(i=>i>=0);if(!ix.length)continue;if(ix.filter(i=>ans[i]>=4).length/ix.length>=0.7)cm=c;else break;}
+  const ov=Math.round(((pm+cm)/2)*100)/100;
+  let lv='Beginner';if(ov>=4.5)lv='Expert';else if(ov>=3.5)lv='Advancing';else if(ov>=2.5)lv='Performing';else if(ov>=1.5)lv='Emerging';
+  document.getElementById('rtag').textContent=t.rtag;
+  document.getElementById('rht').textContent=t.rh;
+  document.getElementById('rsc').textContent=ov.toFixed(2);
+  document.getElementById('rsclbl').textContent=t.rsl+(lang==='ru'?' — оценка цифровой зрелости':'— digital maturity score');
+  const b=document.getElementById('rbadge');b.textContent=t.lv[lv];b.className='rbadge lv-'+lv;
+  document.getElementById('rdesc').textContent=t.ld[lv];
+  const dc=['#2563eb','#7c3aed','#0891b2','#059669','#d97706','#dc2626'];
+  document.getElementById('dg').innerHTML=t.dn.map((n,i)=>`<div class="dc"><div class="dn">${n.toUpperCase()}</div><div class="ds" style="color:${dc[i]}">${ds[i].toFixed(2)}</div><div class="dbw"><div class="dbar" style="width:${((ds[i]-1)/4*100).toFixed(0)}%;background:${dc[i]}"></div></div></div>`).join('');
+  const so=ds.map((s,i)=>({s,i})).sort((a,b)=>b.s-a.s);
+  document.getElementById('sws').innerHTML=`<div class="swt">${t.st}</div>${so.slice(0,2).map(({s,i})=>`<div class="swi"><span style="color:var(--ac)">✦</span><div><strong>${t.dn[i]}</strong> — ${s.toFixed(2)}/5.00</div></div>`).join('')}`;
+  document.getElementById('sww').innerHTML=`<div class="swt">${t.wt}</div>${so.slice(-2).reverse().map(({s,i})=>`<div class="swi"><span style="color:var(--wn)">◈</span><div><strong>${t.dn[i]}</strong> — ${s.toFixed(2)}/5.00</div></div>`).join('')}`;
+  // Tech adoption scores — weighted (Rasch weights from Appendix H)
+  // Weights 2.1 Core: Cloud, Cybersecurity, Data platforms, Data&analytics,
+  //                    Process automation, System integration, Digital ID, Mobile
+  const W1=[0.799,0.483,2.046,4.42,0.132,0.736,1.148,4.059];
+  // Weights 2.2 Emerging: Predictive, BigData, ML/CV, GenAI, AgenticAI,
+  //                        Blockchain, RPA, IoT, DigitalTwins, 3D-print, Robotics, Drones, XR
+  const W2=[0.375,0.489,1.113,5.477,0.227,0.596,1.825,5.865,0.354,0.425,1.086,12.591,0.19];
+  // Min/max for rescaling to [1,5]
+  const w1min=13.8230,w1max=69.1150;
+  const w2min=30.6130,w2max=153.0650;
+  // Weighted TAM scores — only answered items contribute
+  let ws1=0,wn1=0,wx1=0,ws2=0,wn2=0,wx2=0;
+  s2t1.forEach((v,i)=>{if(v!==null){ws1+=v*W1[i];wn1+=1*W1[i];wx1+=5*W1[i];}});
+  s2t2.forEach((v,i)=>{if(v!==null){ws2+=v*W2[i];wn2+=1*W2[i];wx2+=5*W2[i];}});
+  // Rescale to [1,5] using min-max normalization
+  const t1avg=wn1>0?Math.round((1+4*(ws1-wn1)/(wx1-wn1))*100)/100:null;
+  const t2avg=wn2>0?Math.round((1+4*(ws2-wn2)/(wx2-wn2))*100)/100:null;
+  // Technology Adoption Maturity (итоговый) aggregated
+  const tamDT=(t1avg!==null&&t2avg!==null)?Math.round(((t1avg+t2avg)/2)*100)/100:null;
+  const isRu=lang==='ru';
+  const tLbl=(v)=>v===null?(isRu?'Нет данных':'No data'):v<1.5?(isRu?'Не используем':'Not used'):v<2.5?(isRu?'Экспериментируем':'Experimenting'):v<3.5?(isRu?'Частично внедрено':'Partially adopted'):v<4.5?(isRu?'Масштабно внедрено':'Widely adopted'):(isRu?'Лидирующая практика':'Leading practice');
+  const tC=(v)=>v===null?'#94a3b8':v<2?'#dc2626':v<3?'#d97706':v<4?'#2563eb':'#059669';
+  if(t1avg!==null||t2avg!==null){
+    const techHtml=`<div style="margin-bottom:10px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--mu);margin-bottom:6px">${isRu?'ОЦЕНКА ВНЕДРЕНИЯ ТЕХНОЛОГИЙ (TAM — Technology Adoption Maturity)':'TECHNOLOGY ADOPTION ASSESSMENT (TAM — Technology Adoption Maturity)'}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+        <div style="background:var(--sf);border:0.5px solid var(--bd);border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:var(--mu);font-weight:700;margin-bottom:3px">${isRu?'БАЗОВЫЕ ТЕХНОЛОГИИ (Technology Adoption Maturity (базовые))':'BASIC TECHNOLOGIES (Technology Adoption Maturity (базовые))'}</div>
+          <div style="font-size:16px;font-weight:700;color:${tC(t1avg)}">${t1avg!==null?t1avg.toFixed(2):'-'}<span style="font-size:9px;font-weight:400;color:var(--mu)">/5.0</span></div>
+          <div style="font-size:10px;color:var(--mu);margin:2px 0 5px">${tLbl(t1avg)}</div>
+          <div style="height:3px;background:var(--bd);border-radius:2px"><div style="height:100%;width:${t1avg!==null?((t1avg-1)/4*100).toFixed(0):0}%;background:${tC(t1avg)};border-radius:2px"></div></div>
+          ${t1avg!==null&&t1avg>=1.5&&t1avg<2.5?`<div style="font-size:9px;color:#d97706;margin-top:4px">→ ${isRu?'Эксперименты — позитивный сигнал цифровой активности':'Experimenting — positive digital activity signal'}</div>`:''}
+        </div>
+        <div style="background:var(--sf);border:0.5px solid var(--bd);border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:var(--mu);font-weight:700;margin-bottom:3px">${isRu?'EMERGING ТЕХНОЛОГИИ (Technology Adoption Maturity (перспективные))':'EMERGING TECHNOLOGIES (Technology Adoption Maturity (перспективные))'}</div>
+          <div style="font-size:16px;font-weight:700;color:${tC(t2avg)}">${t2avg!==null?t2avg.toFixed(2):'-'}<span style="font-size:9px;font-weight:400;color:var(--mu)">/5.0</span></div>
+          <div style="font-size:10px;color:var(--mu);margin:2px 0 5px">${tLbl(t2avg)}</div>
+          <div style="height:3px;background:var(--bd);border-radius:2px"><div style="height:100%;width:${t2avg!==null?((t2avg-1)/4*100).toFixed(0):0}%;background:${tC(t2avg)};border-radius:2px"></div></div>
+          ${t2avg!==null&&t2avg>=1.5&&t2avg<2.5?`<div style="font-size:9px;color:#d97706;margin-top:4px">→ ${isRu?'Эксперименты с emerging-tech — ключевой индикатор зрелости':'Experimenting with emerging-tech — key maturity indicator'}</div>`:''}
+        </div>
+      </div>
+      ${tamDT!==null?`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--sf);border:0.5px solid var(--bd);border-radius:7px;margin-top:4px">
+        <span style="font-size:9px;font-weight:700;color:var(--mu)">${isRu?'Итоговая оценка внедрения технологий:':'Total Technology Adoption Maturity:'}</span>
+        <span style="font-size:15px;font-weight:700;color:${tC(tamDT)}">${tamDT.toFixed(2)}</span>
+        <span style="font-size:9px;color:var(--mu)">/5.0</span>
+        <span style="font-size:9px;color:var(--mu);margin-left:2px">${tLbl(tamDT)}</span>
+      </div>`:''}
+      <div style="font-size:9px;color:var(--mu);line-height:1.5;padding:6px 9px;background:var(--sf2);border-radius:7px;margin-top:4px">${isRu?'Исследование показало: даже начальные эксперименты с технологиями свидетельствуют об активной цифровой повестке и положительно коррелируют с уровнем цифровой зрелости.':'Research shows: even early technology experiments signal an active digital agenda and positively correlate with overall digital maturity level.'}</div>
+    </div>`;
+    const techEl=document.createElement('div');techEl.innerHTML=techHtml;
+    const sw=document.getElementById('sww');sw.parentNode.insertBefore(techEl,sw.nextSibling);
+  }
+  showLocalRecs(ov,lv,ds,t,so);
+  initChat(ov,lv,ds,t,so);
+  // Export button labels
+  const ex=t.export;
+  const lp=document.getElementById('lbl-pdf');
+  const ls=document.getElementById('lbl-sheets');
+  const sl=document.getElementById('save-section-lbl');
+  if(sl) sl.textContent=ex.section;
+  if(lp) lp.textContent=ex.pdf;
+  if(ls) ls.textContent=ex.sheets;
+  // Thank you message
+  const ty=t.ty;
+  const tyTitle=document.getElementById('ty-title');
+  const tyText=document.getElementById('ty-text');
+  if(tyTitle) tyTitle.textContent=ty.title;
+  if(tyText) tyText.textContent=ty.text;
+  // Store result data for export
+  window._exportData={score:ov,level:lv,dimScores:ds,dimNames:t.dn,recs:document.getElementById('ait')?document.getElementById('ait').innerText:'',barriers:s4.bar,drivers:s4.drv,lang,ans,s1,s4,s2t1,s2t2,t1avg,t2avg,tamDT,consentGiven};
+}
+
+function showLocalRecs(score,lv,ds,t,so){
+  const LEVELS=['Beginner','Emerging','Performing','Advancing','Expert'];
+  const LEVEL_SCORES=[1,1.5,2.5,3.5,4.5];
+  const lvIdx=LEVELS.indexOf(lv);
+  const nextLv=lvIdx<4?LEVELS[lvIdx+1]:null;
+  const nextLvName=nextLv?t.lv[nextLv]:null;
+  const nextScore=nextLv?LEVEL_SCORES[lvIdx+1]:5;
+
+  // Full recommendation map: for each question, what to recommend if score is low (1-2) or medium (3)
+  const REC_RU=[
+    // 3.1 Digital Strategy
+    {low:'Разработать и утвердить Цифровую стратегию как официальный документ, определяющий направление и приоритеты ИТ-развития компании.',mid:'Актуализировать существующую Цифровую стратегию, усилив её связь с бизнес-целями.'},
+    {low:'Задокументировать Цифровую стратегию и организовать её коммуникацию всем заинтересованным сторонам через стратегические сессии и корпоративный портал.',mid:'Улучшить доступность стратегии: создать краткую версию для менеджмента и операционного персонала.'},
+    {low:'Перевести Цифровую стратегию на долгосрочный горизонт (10+ лет), определив амбиции компании в области цифровизации.',mid:'Расширить горизонт планирования стратегии, добавив сценарный анализ на 5–10 лет.'},
+    {low:'Установить регулярный цикл пересмотра Цифровой стратегии (ежеквартально / раз в полгода) с фиксацией изменений.',mid:'Формализовать процедуру актуализации стратегии, назначив ответственных и сроки.'},
+    {low:'Разработать Цифровую дорожную карту с конкретными инициативами, сроками и ответственными для каждого направления трансформации.',mid:'Детализировать существующую дорожную карту: добавить ресурсное планирование и контрольные точки.'},
+    {low:'Определить KPI цифровой трансформации и внедрить регулярный мониторинг: процент автоматизированных процессов, NPS цифровых каналов, время вывода продуктов.',mid:'Расширить набор KPI и связать их с бизнес-результатами компании.'},
+    // 3.2 Org & Leadership
+    {low:'Обеспечить видимую поддержку топ-менеджмента: включить цифровую повестку в регулярные встречи руководства, назначить Chief Digital Officer или аналог.',mid:'Усилить вовлечённость руководства: регулярные стратегические обзоры прогресса трансформации.'},
+    {low:'Создать структуру управления цифровой трансформацией: Digital Office или PMO с чёткими ролями, KPI и полномочиями.',mid:'Уточнить матрицу ответственности (RACI) для ключевых цифровых инициатив.'},
+    {low:'Сформировать инвестиционный портфель цифровых инициатив с выделением бюджета и ROI-расчётами для каждого проекта.',mid:'Увеличить долю инвестиций в цифровые инициативы, обосновав через бизнес-кейсы.'},
+    {low:'Внедрить модель совместной разработки инициатив (IT + бизнес): создать кросс-функциональные продуктовые команды.',mid:'Усилить вовлечение бизнеса: включить представителей бизнес-подразделений в проектные комитеты.'},
+    {low:'Создать систему масштабирования успешных пилотов: от PoC до продуктива через стандартизированные критерии оценки и процедуры тиражирования.',mid:'Ускорить переход пилотов в продуктив: сократить цикл от тестирования до внедрения.'},
+    {low:'Выстроить практику привлечения внешних экспертов и партнёров для ускорения трансформации и переноса компетенций внутрь.',mid:'Расширить экосистему партнёров: добавить технологических вендоров и консультантов.'},
+    // 3.3 Culture
+    {low:'Провести аудит цифровых компетенций и разработать план найма/развития специалистов в области данных, облака, кибербезопасности и продуктовой разработки.',mid:'Устранить конкретные пробелы в компетенциях: определить приоритетные роли для найма.'},
+    {low:'Запустить корпоративную программу цифрового апскиллинга: онлайн-курсы, внутренние академии, сертификации по ключевым технологиям.',mid:'Интенсифицировать обучение: увеличить охват и добавить практические форматы (хакатоны, стажировки).'},
+    {low:'Инвестировать в развитие внутренней ИТ-экспертизы: центры компетенций по Data, Cloud, AI — снижение зависимости от внешних подрядчиков.',mid:'Масштабировать существующие центры компетенций, добавив новые технологические направления.'},
+    {low:'Реализовать программу управления изменениями (Change Management): коммуникации, обучение, работа с сопротивлением персонала.',mid:'Усилить коммуникацию трансформационных изменений, вовлекая сотрудников в процесс.'},
+    {low:'Создать культуру экспериментирования: ввести механизм Innovation Lab, выделить бюджет на эксперименты без требования немедленного ROI.',mid:'Расширить культуру эксперимента: поощрять инициативы снизу, фиксировать уроки.'},
+    // 3.4 Customers
+    {low:'Разработать и вывести на рынок цифровые сервисы: личный кабинет, мобильное приложение, API-интеграции для партнёров.',mid:'Расширить портфель цифровых сервисов, добавив персонализацию и self-service функции.'},
+    {low:'Построить омниканальную модель взаимодействия с клиентами: унифицировать опыт через онлайн, мобайл, контакт-центр.',mid:'Улучшить цифровые каналы: повысить конверсию и пользовательский опыт (UX-аудит).'},
+    {low:'Автоматизировать клиентские операции: внедрить CRM, чат-боты для обработки обращений, автоматические уведомления.',mid:'Повысить уровень автоматизации CX: добавить предиктивные триггеры и персонализацию.'},
+    {low:'Создать единую Customer Data Platform (CDP) для сбора и анализа клиентских данных, внедрить аналитику поведения.',mid:'Углубить клиентскую аналитику: сегментация, предиктивные модели оттока, рекомендательные системы.'},
+    // 3.5 Processes
+    {low:'Провести инвентаризацию процессов и автоматизировать ключевые из них: внедрить ERP, CRM или BPM-систему в зависимости от приоритетов бизнеса.',mid:'Расширить покрытие автоматизации на смежные процессы, устранив "белые пятна".'},
+    {low:'Внедрить сквозные процессы и интеграционную платформу (ESB/API Gateway) для устранения информационных силосов между подразделениями.',mid:'Углубить интеграцию: подключить оставшиеся изолированные системы к единой шине данных.'},
+    {low:'Внедрить системы мониторинга процессов (Process Mining, BPM-мониторинг) для обеспечения операционной прозрачности в реальном времени.',mid:'Расширить мониторинг: добавить предиктивные алерты и дашборды для руководства.'},
+    {low:'Провести реинжиниринг ключевых процессов: не просто автоматизировать существующее, а пересмотреть процессы "с чистого листа" для достижения цифровой эффективности.',mid:'Ускорить реинжиниринг процессов параллельно с внедрением новых систем.'},
+    // 3.6 Technology
+    {low:'Разработать облачную стратегию (Cloud Strategy): определить модель — hybrid/multi-cloud, план миграции с on-premise для некритичных систем.',mid:'Ускорить облачную миграцию, перенося дополнительные workloads в облако.'},
+    {low:'Перейти к микросервисной архитектуре для новых систем: снижение зависимостей, ускорение разработки, упрощение интеграций.',mid:'Расширить микросервисный подход на дополнительные системы, рефакторинг монолитов.'},
+    {low:'Внедрить программу повышения осведомлённости об ИБ: обязательные тренинги, симуляции фишинга, Security Champion в каждом подразделении.',mid:'Углубить культуру ИБ: добавить технические контроли и аудиты.'},
+    {low:'Разработать план замены legacy-систем: приоритизировать критичные, определить стратегию (замена/обёртка через API/постепенная миграция).',mid:'Ускорить вывод из эксплуатации наиболее критичных legacy-компонентов.'},
+    {low:'Внедрить единый подход к управлению технологическим портфелем: архитектурный комитет, Technology Radar, стандарты выбора систем.',mid:'Формализовать Technology Governance: ввести обязательное архитектурное согласование инициатив.'},
+    {low:'Создать Data Platform: централизованное хранилище данных (DWH/Data Lake), единый каталог данных, управление качеством данных (Data Governance).',mid:'Улучшить Data Platform: добавить Data Catalog и автоматизировать контроль качества данных.'},
+    {low:'Внедрить практики работы с данными: DataOps, самообслуживающая аналитика, регулярные дашборды для менеджмента.',mid:'Масштабировать аналитические практики: расширить доступ к данным для бизнес-пользователей.'},
+    {low:'Запустить центр компетенций по продвинутой аналитике и AI: предиктивные модели, ML-конвейеры, пилоты Generative AI в приоритетных процессах.',mid:'Масштабировать продвинутую аналитику: перевести пилоты ML/AI в производственную эксплуатацию.'},
+  ];
+  const REC_EN=[
+    {low:'Develop and approve a Digital Strategy as an official document defining the direction and priorities of IT development.',mid:'Update the existing Digital Strategy, strengthening its alignment with business objectives.'},
+    {low:'Document the Digital Strategy and communicate it to all stakeholders via strategic sessions and corporate intranet.',mid:'Improve strategy accessibility: create a concise version for management and operational staff.'},
+    {low:'Extend the Digital Strategy to a long-term horizon (10+ years), defining the company\'s digital ambitions.',mid:'Broaden the planning horizon by adding scenario analysis for 5–10 years.'},
+    {low:'Establish a regular Digital Strategy review cycle (quarterly/semi-annually) with documented change log.',mid:'Formalise the strategy update procedure, assigning owners and deadlines.'},
+    {low:'Develop a Digital Roadmap with specific initiatives, timelines and owners for each transformation direction.',mid:'Enrich the existing roadmap: add resource planning and milestones.'},
+    {low:'Define digital transformation KPIs and implement regular monitoring: % automated processes, digital channel NPS, time-to-market.',mid:'Expand the KPI set and link them to business outcomes.'},
+    {low:'Ensure visible top-management support: include digital agenda in leadership meetings, appoint a Chief Digital Officer or equivalent.',mid:'Strengthen leadership engagement through regular strategic transformation reviews.'},
+    {low:'Create a digital transformation governance structure: Digital Office or PMO with clear roles, KPIs and authority.',mid:'Clarify the RACI matrix for key digital initiatives.'},
+    {low:'Build a digital initiative investment portfolio with budget allocation and ROI calculations for each project.',mid:'Increase the share of investment in digital initiatives, backed by business cases.'},
+    {low:'Implement a co-creation model (IT + Business): build cross-functional product teams.',mid:'Strengthen business involvement: include business unit representatives in project committees.'},
+    {low:'Create a pilot scaling system: from PoC to production via standardised evaluation criteria and rollout procedures.',mid:'Accelerate the pilot-to-production cycle, shortening the testing-to-deployment loop.'},
+    {low:'Establish a practice of engaging external experts and partners to accelerate transformation and internalise competencies.',mid:'Expand the partner ecosystem: add technology vendors and consultants.'},
+    {low:'Conduct a digital competency audit and develop a hiring/development plan for data, cloud, cybersecurity and product roles.',mid:'Close specific competency gaps: identify priority roles for hiring.'},
+    {low:'Launch a corporate digital upskilling programme: online courses, internal academies, certifications in key technologies.',mid:'Intensify training: increase coverage and add practical formats (hackathons, internships).'},
+    {low:'Invest in internal IT expertise: competency centres for Data, Cloud, AI — reducing dependency on external contractors.',mid:'Scale existing competency centres, adding new technology directions.'},
+    {low:'Implement a Change Management programme: communications, training, addressing staff resistance to change.',mid:'Strengthen transformation communications, involving employees in the process.'},
+    {low:'Build an experimentation culture: introduce an Innovation Lab mechanism, allocate experiment budgets without immediate ROI requirements.',mid:'Expand the experimentation culture: encourage bottom-up initiatives, capture lessons learned.'},
+    {low:'Develop and launch digital services: customer portal, mobile app, API integrations for partners.',mid:'Expand the digital services portfolio, adding personalisation and self-service features.'},
+    {low:'Build an omnichannel customer interaction model: unify experience across online, mobile and contact centre.',mid:'Improve digital channels: increase conversion and user experience (UX audit).'},
+    {low:'Automate customer operations: implement CRM, chatbots for query handling, automated notifications.',mid:'Increase CX automation level: add predictive triggers and personalisation.'},
+    {low:'Create a Customer Data Platform (CDP) for collecting and analysing customer data, implement behavioural analytics.',mid:'Deepen customer analytics: segmentation, predictive churn models, recommendation engines.'},
+    {low:'Conduct a process inventory and automate key processes: implement ERP, CRM or BPM system based on business priorities.',mid:'Extend automation coverage to adjacent processes, eliminating "white spots".'},
+    {low:'Implement end-to-end processes and an integration platform (ESB/API Gateway) to eliminate information silos.',mid:'Deepen integration: connect remaining isolated systems to a unified data bus.'},
+    {low:'Implement process monitoring systems (Process Mining, BPM monitoring) for real-time operational transparency.',mid:'Expand monitoring: add predictive alerts and management dashboards.'},
+    {low:'Conduct process reengineering: not just automate existing processes, but redesign them from scratch for digital efficiency.',mid:'Accelerate process reengineering in parallel with new system implementation.'},
+    {low:'Develop a Cloud Strategy: define the model (hybrid/multi-cloud), migration plan from on-premise for non-critical systems.',mid:'Accelerate cloud migration, moving additional workloads to the cloud.'},
+    {low:'Transition to microservices architecture for new systems: reduce dependencies, accelerate development, simplify integrations.',mid:'Extend the microservices approach to additional systems, refactoring monoliths.'},
+    {low:'Implement a cybersecurity awareness programme: mandatory training, phishing simulations, Security Champions per department.',mid:'Deepen security culture: add technical controls and audits.'},
+    {low:'Develop a legacy system replacement plan: prioritise critical ones, define strategy (replace/wrap via API/gradual migration).',mid:'Accelerate decommissioning of the most critical legacy components.'},
+    {low:'Implement unified technology portfolio management: architecture committee, Technology Radar, system selection standards.',mid:'Formalise Technology Governance: introduce mandatory architectural sign-off for initiatives.'},
+    {low:'Build a Data Platform: centralised data warehouse (DWH/Data Lake), unified data catalogue, Data Governance.',mid:'Improve the Data Platform: add Data Catalog and automate data quality control.'},
+    {low:'Implement data practices: DataOps, self-service analytics, regular management dashboards.',mid:'Scale analytics practices: broaden data access for business users.'},
+    {low:'Launch an advanced analytics and AI centre of excellence: predictive models, ML pipelines, Generative AI pilots in priority processes.',mid:'Scale advanced analytics: move ML/AI pilots into production operation.'},
+  ];
+
+  const recMap=lang==='ru'?REC_RU:REC_EN;
+
+  // Collect actionable items per direction
+  const dimToDir=[0,0,1,4,3,2]; // dim → direction index
+  const dirTitles=lang==='ru'
+    ?['Стратегия и управление','Люди и компетенции','Технологии и архитектура','Процессы и данные','Клиентский опыт']
+    :['Strategy & Governance','People & Competencies','Technology & Architecture','Processes & Data','Customer Experience'];
+  const dColors=['#2563eb','#7c3aed','#0891b2','#d97706','#059669'];
+
+  // Build direction → list of recommendations
+  const dirRecs=dirTitles.map((_,di)=>[]);
+  ans.forEach((v,i)=>{
+    if(v===null||v>=4) return;
+    const q=recMap[i];if(!q) return;
+    const dir=dimToDir[Math.floor(i<6?0:i<12?1:i<17?2:i<21?3:i<25?4:5)];
+    // Correct dim mapping
+    let dim=0;
+    if(i<6) dim=0; else if(i<12) dim=1; else if(i<17) dim=2;
+    else if(i<21) dim=3; else if(i<25) dim=4; else dim=5;
+    const d=dimToDir[dim];
+    const rec=v<=2?q.low:q.mid;
+    if(rec&&dirRecs[d].length<3) dirRecs[d].push({rec,score:v,topic:i});
+  });
+
+  // LEVELS for next level
+  const lvNames=lang==='ru'
+    ?['Начальный','Формирующийся','Развивающийся','Продвинутый','Эксперт']
+    :['Beginner','Emerging','Performing','Advancing','Expert'];
+
+  const BAR_RU=['Нехватка финансирования','Нехватка ИТ-кадров','Сопротивление изменениям','Устаревшие системы','Сложности интеграции','Низкое качество данных','Регуляторные ограничения','Требования ИБ','Другое'];
+  const DRV_RU=['Поддержка руководства','Чёткие цели','Финансирование','Развитие компетенций','Роль ИТ','Запросы клиентов','Современные технологии','Другое'];
+  const BAR_EN=['Lack of funding','IT talent shortage','Resistance to change','Outdated systems','Integration complexity','Poor data quality','Regulatory constraints','Cybersecurity req','Other'];
+  const DRV_EN=['Leadership support','Clear goals','Funding','Competency dev','IT dept role','Customer demand','Modern tech','Other'];
+  const bLbls=lang==='ru'?BAR_RU:BAR_EN;
+  const dLbls=lang==='ru'?DRV_RU:DRV_EN;
+  const barriers=s4.bar.map(i=>bLbls[i]).filter(Boolean);
+  const drivers=s4.drv.map(i=>dLbls[i]).filter(Boolean);
+
+  const chip=(txt,c,bg)=>`<span style="display:inline-block;font-size:9px;padding:2px 7px;border-radius:8px;margin:2px;font-weight:600;color:${c};background:${bg}">${txt}</span>`;
+
+  let h='';
+
+  // Header: current → next level
+  h+=`<div style="background:#f8f9fc;border:0.5px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px">
+      <span style="font-size:14px;font-weight:800;color:#2563eb">${score.toFixed(2)}</span>
+      <span style="font-size:9px;color:#64748b">/5.0</span>
+      <span style="padding:2px 8px;border-radius:8px;font-size:9px;font-weight:700;background:#eff6ff;color:#2563eb">${t.lv[lv]}</span>
+      ${nextLv?`<span style="font-size:10px;color:#94a3b8">→</span>
+      <span style="padding:2px 8px;border-radius:8px;font-size:9px;font-weight:700;background:#f0fdf4;color:#059669">${nextLvName} ≥${nextScore}</span>
+      <span style="font-size:9px;color:#64748b">${lang==='ru'?'(цель)':'(target)'}</span>`:''}
+    </div>
+    <div style="font-size:10px;color:#475569;line-height:1.5">${nextLv
+      ?(lang==='ru'?`Для перехода на уровень <b>${nextLvName}</b> необходимо достичь балла ≥${nextScore}/5.0. Ниже — конкретные рекомендации для ИТ-стратегии.`
+        :`To reach <b>${nextLvName}</b> level, achieve a score ≥${nextScore}/5.0. Below are specific IT strategy recommendations.`)
+      :(lang==='ru'?'Максимальный уровень зрелости достигнут.':'Maximum maturity level reached.')
+    }</div>
+  </div>`;
+
+  // Barriers & drivers
+  if(barriers.length||drivers.length){
+    h+=`<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">`;
+    if(barriers.length) h+=`<div style="flex:1;min-width:130px"><div style="font-size:9px;font-weight:700;color:#dc2626;letter-spacing:.05em;margin-bottom:3px">${lang==='ru'?'БАРЬЕРЫ':'BARRIERS'}</div>${barriers.map(b=>chip(b,'#dc2626','#fef2f2')).join('')}</div>`;
+    if(drivers.length) h+=`<div style="flex:1;min-width:130px"><div style="font-size:9px;font-weight:700;color:#059669;letter-spacing:.05em;margin-bottom:3px">${lang==='ru'?'ДРАЙВЕРЫ':'DRIVERS'}</div>${drivers.map(d=>chip(d,'#059669','#f0fdf4')).join('')}</div>`;
+    h+=`</div>`;
+  }
+
+  h+=`<div style="font-size:10px;font-weight:700;color:#0f172a;margin-bottom:8px;letter-spacing:.04em">${lang==='ru'?'РЕКОМЕНДАЦИИ ПО ИТ-СТРАТЕГИИ:':'IT STRATEGY RECOMMENDATIONS:'}</div>`;
+
+  // Directions with recommendations
+  dirRecs.forEach((recs,di)=>{
+    const c=dColors[di];
+    h+=`<div style="margin-bottom:8px;border:0.5px solid #e2e8f0;border-radius:9px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 10px;background:#f8f9fc;border-bottom:${recs.length?'0.5px solid #e2e8f0':'none'}">
+        <span style="font-size:11px;font-weight:800;color:${c}">${di+1}</span>
+        <span style="font-size:10px;font-weight:700;color:#0f172a;flex:1">${dirTitles[di]}</span>
+        ${recs.length?`<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:7px;color:#dc2626;background:#fef2f2">${recs.length} ${lang==='ru'?'рек.':'rec.'}</span>`
+        :`<span style="font-size:9px;color:#059669">✓ ${lang==='ru'?'OK':'OK'}</span>`}
+      </div>`;
+    if(recs.length){
+      recs.forEach((r,ri)=>{
+        h+=`<div style="padding:6px 10px 6px 12px;border-left:3px solid ${c};${ri<recs.length-1?'border-bottom:0.5px solid #f1f5f9':''}">
+          <div style="font-size:10px;color:#0f172a;line-height:1.4">${r.rec}</div>
+        </div>`;
+      });
+    } else {
+      h+=`<div style="padding:5px 10px;font-size:10px;color:#059669">${lang==='ru'?'Критичных пробелов по данному направлению не выявлено.':'No critical gaps identified for this direction.'}</div>`;
+    }
+    h+=`</div>`;
+  });
+
+  // AI block placeholder
+
+
+  document.getElementById('ait').innerHTML=h;
+}
+
+
+function exportPDF(){
+  const isRu=lang==='ru';
+  // Print-based PDF - opens print dialog
+  const d=window._exportData;
+  if(!d){alert(isRu?'Данные не найдены':'No data found');return;}
+  const LEVELS=['Beginner','Emerging','Performing','Advancing','Expert'];
+  const lvNames={ru:{Beginner:'Начальный',Emerging:'Формирующийся',Performing:'Развивающийся',Advancing:'Продвинутый',Expert:'Эксперт'},en:{Beginner:'Beginner',Emerging:'Emerging',Performing:'Performing',Advancing:'Advancing',Expert:'Expert'}};
+  const lvName=isRu?lvNames.ru[d.level]:lvNames.en[d.level];
+  const dimColors=['#2563eb','#7c3aed','#0891b2','#059669','#d97706','#dc2626'];
+  const dimRows=d.dimNames.map((n,i)=>{
+    const sc=d.dimScores[i];
+    const pct=((sc-1)/4*100).toFixed(0);
+    return `<tr><td style="padding:8px 12px;font-size:12px;border-bottom:1px solid #f1f5f9"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dimColors[i]};margin-right:7px;vertical-align:middle"></span>${n}</td><td style="padding:8px 12px;font-size:12px;font-weight:700;color:${dimColors[i]};text-align:right;border-bottom:1px solid #f1f5f9">${sc.toFixed(2)}</td></tr>`;
+  }).join('');
+  const dColors2=['#2563eb','#7c3aed','#0891b2','#d97706','#059669'];
+  const dNames2=isRu?['Стратегия и управление','Люди и компетенции','Технологии и архитектура','Процессы и данные','Клиентский опыт']:['Strategy & Governance','People & Competencies','Technology & Architecture','Processes & Data','Customer Experience'];
+  // Parse recs text into direction blocks
+  let recsHtml='';
+  if(d.recs){
+    const lines=d.recs.split('\n').filter(l=>l.trim());
+    let curDir=-1,curItems=[];
+    const blocks=[];
+    lines.forEach(line=>{
+      const m=line.match(/^(\d)\s+(.+)/);
+      if(m&&parseInt(m[1])>=1&&parseInt(m[1])<=5){
+        if(curDir>=0) blocks.push({dir:curDir,items:curItems});
+        curDir=parseInt(m[1])-1; curItems=[];
+      } else if(line.trim()&&curDir>=0){
+        curItems.push(line.trim());
+      }
+    });
+    if(curDir>=0) blocks.push({dir:curDir,items:curItems});
+    if(blocks.length){
+      recsHtml=blocks.map(b=>{
+        const c=dColors2[b.dir]||'#2563eb';
+        const nm=dNames2[b.dir]||'';
+        const items=b.items.map(it=>`<div class="rec-item" style="border-left-color:${c}">${it}</div>`).join('');
+        return `<div class="dir-block"><div class="dir-header"><span class="dir-num" style="color:${c}">${b.dir+1}</span><span class="dir-name">${nm}</span></div>${items}</div>`;
+      }).join('');
+    } else {
+      recsHtml=`<div style="font-size:11px;line-height:1.7;color:#374151;white-space:pre-wrap">${d.recs}</div>`;
+    }
+  };
+  const now=new Date();
+  const dateStr=`${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()}`;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>Digital Maturity Assessment — ${d.score.toFixed(2)}</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:'Segoe UI',Arial,sans-serif;color:#0f172a;padding:36px;max-width:800px;margin:0 auto;font-size:13px}
+      .header-bar{height:4px;background:linear-gradient(90deg,#2563eb,#0891b2);border-radius:2px;margin-bottom:20px}
+      .doc-title{font-size:22px;font-weight:800;color:#0f172a;margin-bottom:3px}
+      .doc-sub{font-size:12px;color:#64748b;margin-bottom:6px}
+      .doc-date{font-size:11px;color:#94a3b8;margin-bottom:24px}
+      .score-block{background:linear-gradient(135deg,#eff6ff,#f0fbff);border:1px solid #bfdbfe;border-radius:12px;padding:24px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden}
+      .score-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#0891b2)}
+      .score-num{font-size:52px;font-weight:800;color:#2563eb;line-height:1;letter-spacing:-1px}
+      .score-max{font-size:16px;color:#94a3b8;font-weight:400}
+      .score-lbl{font-size:11px;color:#64748b;margin:5px 0 10px;letter-spacing:.04em;font-weight:600;text-transform:uppercase}
+      .level-badge{display:inline-block;padding:5px 18px;border-radius:14px;font-size:13px;font-weight:700;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+      .section-title{font-size:10px;font-weight:700;letter-spacing:.1em;color:#64748b;margin:20px 0 8px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+      .section-title::after{content:'';flex:1;height:1px;background:#e2e8f0}
+      table{width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0}
+      thead tr{background:#f1f5f9}
+      th{padding:9px 12px;font-size:10px;font-weight:700;text-align:left;border-bottom:1px solid #e2e8f0;color:#64748b;letter-spacing:.06em;text-transform:uppercase}
+      th:last-child{text-align:right}
+      td{padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:12px}
+      td:last-child{text-align:right;font-weight:700;color:#2563eb}
+      tr:last-child td{border-bottom:none}
+      tr:nth-child(even){background:#fafbfc}
+      .dim-bar-cell{padding:8px 12px 8px 0}
+      .chips-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+      .chip{display:inline-block;padding:3px 9px;border-radius:9px;font-size:10px;font-weight:600}
+      .chip-red{background:#fef2f2;color:#dc2626}
+      .chip-green{background:#f0fdf4;color:#059669}
+      .recs-section{margin-top:4px}
+      .dir-block{margin-bottom:10px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden}
+      .dir-header{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#f8f9fc;border-bottom:1px solid #e2e8f0}
+      .dir-num{font-size:12px;font-weight:800;color:#2563eb;width:18px}
+      .dir-name{font-size:12px;font-weight:700;color:#0f172a;flex:1}
+      .dir-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:7px}
+      .rec-item{padding:6px 12px 6px 15px;border-left:3px solid #2563eb;font-size:11px;color:#374151;line-height:1.55;border-bottom:1px solid #f1f5f9}
+      .rec-item:last-child{border-bottom:none}
+      .rec-item.purple{border-left-color:#7c3aed}
+      .rec-item.teal{border-left-color:#0891b2}
+      .rec-item.amber{border-left-color:#d97706}
+      .rec-item.green{border-left-color:#059669}
+      .footer{margin-top:28px;padding-top:10px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+      .footer-left{font-size:10px;color:#64748b;line-height:1.6}
+      .footer-right{font-size:10px;color:#94a3b8}
+      @media print{body{padding:20px}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+    </style>
+  </head><body>
+    <div class="header-bar"></div>
+    <div class="doc-title">Digital Maturity Assessment</div>
+    <div class="doc-sub">${isRu?'Оценка цифровой зрелости компании':'Company Digital Maturity Assessment'}</div>
+    <div class="doc-date">${dateStr}</div>
+    <div class="score-block">
+      <div class="score-num">${d.score.toFixed(2)}<span class="score-max"> /5.0</span></div>
+      <div class="score-lbl">${isRu?'ОЦЕНКА ЦИФРОВОЙ ЗРЕЛОСТИ (DMA)':'DIGITAL MATURITY ASSESSMENT (DMA)'}</div>
+      <div class="level-badge">${lvName}</div>
+    </div>
+    <div class="section-title">${isRu?'Результаты по измерениям':'Results by dimension'}</div>
+    <table><thead><tr><th>${isRu?'Измерение':'Dimension'}</th><th>${isRu?'Балл':'Score'}</th></tr></thead><tbody>${dimRows}</tbody></table>
+    ${d.recs?`<div class="section-title">${isRu?'Рекомендации по ИТ-стратегии':'IT Strategy Recommendations'}</div><div class="recs-section">${recsHtml}</div>`:''}
+    <div class="footer">
+      <div class="footer-left">
+        <strong>Digital Maturity Assessment</strong><br>
+        Developed by Zhanl Mamykova · <a href="mailto:mamykova2021@gmail.com" style="color:#2563eb;text-decoration:none">mamykova2021@gmail.com</a><br>
+        Master's Research Project · Technische Hochschule Ingolstadt
+      </div>
+      <div class="footer-right">${dateStr}</div>
+    </div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+function exportText(){
+  const isRu=lang==='ru';
+  const d=window._exportData;
+  if(!d){alert(isRu?'Данные не найдены':'No data found');return;}
+  const LEVELS=['Beginner','Emerging','Performing','Advancing','Expert'];
+  const lvNames={ru:{Beginner:'Начальный',Emerging:'Формирующийся',Performing:'Развивающийся',Advancing:'Продвинутый',Expert:'Эксперт'},en:{Beginner:'Beginner',Emerging:'Emerging',Performing:'Performing',Advancing:'Advancing',Expert:'Expert'}};
+  const lvName=isRu?lvNames.ru[d.level]:lvNames.en[d.level];
+  const now=new Date();
+  const dateStr=`${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()}`;
+  const BAR_RU=['Нехватка финансирования','Нехватка ИТ-кадров','Сопротивление изменениям','Устаревшие системы','Сложности интеграции','Низкое качество данных','Регуляторные ограничения','Требования ИБ','Другое'];
+  const DRV_RU=['Поддержка руководства','Чёткие цели','Финансирование','Развитие компетенций','Роль ИТ','Запросы клиентов','Современные технологии','Другое'];
+  const BAR_EN=['Lack of funding','IT talent shortage','Resistance to change','Outdated systems','Integration complexity','Poor data quality','Regulatory constraints','Cybersecurity req','Other'];
+  const DRV_EN=['Leadership support','Clear goals','Funding','Competency development','IT dept role','Customer demand','Modern technologies','Other'];
+  const bLbls=isRu?BAR_RU:BAR_EN;
+  const dLbls=isRu?DRV_RU:DRV_EN;
+  const barriers=s4.bar.map(i=>bLbls[i]).filter(Boolean);
+  const drivers=s4.drv.map(i=>dLbls[i]).filter(Boolean);
+  let txt='';
+  txt+=`DIGITAL MATURITY ASSESSMENT\n`;
+  txt+=`${isRu?'Оценка цифровой зрелости компании':'Company Digital Maturity Assessment'}\n`;
+  txt+=`${dateStr}\n`;
+  txt+=`${'='.repeat(50)}\n\n`;
+  txt+=`${isRu?'ОБЩИЙ БАЛЛ':'OVERALL SCORE'}: ${d.score.toFixed(2)} / 5.0\n`;
+  txt+=`${isRu?'УРОВЕНЬ ЗРЕЛОСТИ':'MATURITY LEVEL'}: ${lvName}\n\n`;
+  txt+=`${isRu?'РЕЗУЛЬТАТЫ ПО ИЗМЕРЕНИЯМ':'RESULTS BY DIMENSION'}\n`;
+  txt+=`${'-'.repeat(40)}\n`;
+  d.dimNames.forEach((n,i)=>{txt+=`${n}: ${d.dimScores[i].toFixed(2)}/5.0\n`;});
+  if(barriers.length){txt+=`\n${isRu?'БАРЬЕРЫ':'BARRIERS'}: ${barriers.join(', ')}\n`;}
+  if(drivers.length){txt+=`${isRu?'ДРАЙВЕРЫ':'DRIVERS'}: ${drivers.join(', ')}\n`;}
+  if(d.recs){
+    txt+=`\n${'='.repeat(50)}\n`;
+    txt+=`${isRu?'РЕКОМЕНДАЦИИ ПО ИТ-СТРАТЕГИИ':'IT STRATEGY RECOMMENDATIONS'}\n`;
+    txt+=`${'-'.repeat(40)}\n`;
+    txt+=d.recs+'\n';
+  }
+  txt+=`\n${'='.repeat(50)}\n`;
+  txt+=`Digital Maturity Assessment\n`;
+  txt+=`Developed by Zhanl Mamykova · Master's Research Project\n`;
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`DMA_Results_${dateStr.replace(/\./g,'-')}.txt`;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// ── Google Sheets URL — вставьте ваш URL после настройки Apps Script ──────────
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxvZnmnK2Z1bY91sNSk_3z_HhSKd0c-Lh5GFzflgY95YkQqqH5F8d5v0TUGk69QPHZqDQ/exec';
+
+async function saveToSheets(){
+  const isRu=lang==='ru';
+  const d=window._exportData;
+  if(!d){return;}
+
+  const statusEl=document.getElementById('sheets-status');
+  const btn=document.getElementById('btn-export-sheets');
+
+  if(!GOOGLE_SHEET_URL){
+    if(statusEl) statusEl.innerHTML=`<span style="color:#d97706">⚠ ${isRu?'Google Sheets не настроен. Скачайте PDF и обратитесь к организатору исследования.':'Google Sheets not configured. Download PDF and contact the research organizer.'}</span>`;
+    return;
+  }
+
+  // Show loading state
+  if(btn){btn.disabled=true;btn.style.opacity='0.6';}
+  if(statusEl) statusEl.innerHTML=`<span style="color:#64748b">${isRu?'Отправляю данные...':'Sending data...'}</span>`;
+
+  // Prepare payload
+  const payload={
+    lang, consentGiven,
+    score:d.score, level:d.level,
+    dimScores:d.dimScores,
+    ans:d.ans,
+    s1:d.s1, s4:d.s4,
+    s2t1:d.s2t1, s2t2:d.s2t2,
+    t1avg:d.t1avg, t2avg:d.t2avg, tamDT:d.tamDT
+  };
+
+  try{
+    const resp=await fetch(GOOGLE_SHEET_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    // no-cors means we can't read response, assume success
+    if(statusEl) statusEl.innerHTML=`<span style="color:#059669">✓ ${isRu?'Данные успешно отправлены в таблицу!':'Data successfully sent to spreadsheet!'}</span>`;
+    if(btn){btn.textContent='✓ '+(isRu?'Отправлено':'Sent');btn.style.background='#f0fdf4';btn.style.borderColor='#059669';}
+  }catch(err){
+    if(statusEl) statusEl.innerHTML=`<span style="color:#dc2626">✗ ${isRu?'Ошибка отправки. Скачайте PDF.':'Send error. Download PDF instead.'}</span>`;
+    if(btn){btn.disabled=false;btn.style.opacity='1';}
+  }
+}
+
+
+// ── AI CHAT FUNCTIONS ─────────────────────────────────────────────────────────
+let _chatData = {};
+
+function buildFullContext() {
+  const {score,lv,ds,t,isRu,dimNames,lvNames} = _chatData;
+  const ed = window._exportData || {};
+  const s1data = ed.s1 || {};
+  const s4data = ed.s4 || {};
+  const answers = ed.ans || [];
+  const st1 = ed.s2t1 || [];
+  const st2 = ed.s2t2 || [];
+
+  // Industry
+  const IND_RU=['Промышленность (ГМК/Энергетика)','Нефтегазовая','Пищевая промышленность','Финансы/Банки','ИТ/Телекоммуникации','Транспорт/Логистика','Ритейл','Образование и наука','Здравоохранение','Строительство','Другое'];
+  const IND_EN=['Industry (Mining/Energy)','Oil & Gas','Food Industry','Finance/Banking','IT/Telecom','Transport/Logistics','Retail','Education','Healthcare','Construction','Other'];
+  const SZ_RU=['менее 100 сотрудников','101–500 сотрудников','501–1000 сотрудников','1001–10 000 сотрудников','более 10 000 сотрудников'];
+  const SZ_EN=['less than 100 employees','101–500 employees','501–1000 employees','1001–10,000 employees','more than 10,000 employees'];
+  const RO_RU=['Собственник бизнеса','CEO/Первый руководитель','Топ-менеджер (ИТ и цифровизация)','Директор по ИТ/цифровизации','Руководитель ИТ-направления','Другое'];
+  const RO_EN=['Business Owner','CEO/Chief Executive','Top Manager (IT & Digitalization)','IT/Digitalization Director','Head of IT','Other'];
+
+  const iLbls = isRu ? IND_RU : IND_EN;
+  const sLbls = isRu ? SZ_RU : SZ_EN;
+  const rLbls = isRu ? RO_RU : RO_EN;
+  const industry = s1data.ind !== null && s1data.ind !== undefined ? (iLbls[s1data.ind]||'') : '';
+  const size = s1data.sz !== null && s1data.sz !== undefined ? (sLbls[s1data.sz]||'') : '';
+  const role = s1data.ro !== null && s1data.ro !== undefined ? (rLbls[s1data.ro]||'') : '';
+
+  // Section 3 question labels for context
+  const Q_RU=['Цифровая стратегия внедрена','Стратегия задокументирована','Долгосрочный горизонт','Стратегия пересматривается','Дорожная карта','KPI стратегии','Поддержка руководства','Роли и ответственность','Инвестиции','Инициативы с бизнесом','Масштабирование пилотов','Внешняя экспертиза','Необходимые кадры','Обучение компетенциям','Развитие ИТ-экспертизы','Готовность к изменениям','Культура эксперимента','Цифровые сервисы','Цифровые каналы','Автоматизация CX','Аналитика клиентов','Автоматизация процессов','Интеграция процессов','Мониторинг процессов','Реинжиниринг процессов','Инфраструктура on-premise','Микросервисная архитектура','Кибербезопасность','Legacy-системы','Системное внедрение','Централизация данных','Практики аналитики','Продвинутая аналитика'];
+  const Q_EN=['Digital Strategy implemented','Strategy documented','Long-term horizon','Strategy reviewed','Digital Roadmap','Strategy KPIs','Leadership support','Roles defined','Investments','Co-creation with business','Pilot scaling','External expertise','Necessary staff','Competency training','IT expertise','Readiness for change','Experimentation culture','Digital services','Digital channels','CX automation','Customer analytics','Process automation','Process integration','Process monitoring','Process reengineering','On-premise infra','Microservices','Cybersecurity','Legacy systems','Systematic implementation','Data centralization','Analytics practices','Advanced analytics'];
+  const qLbls = isRu ? Q_RU : Q_EN;
+
+  // Core tech labels
+  const T1=['Cloud','Cybersecurity','Data platforms','Data & analytics','Process automation','System integration','Digital ID','Mobile'];
+  const T2=['Predictive analytics','Big Data','ML/CV','Gen AI','Agentic AI','Blockchain','RPA','IoT','Digital Twins','3D-printing','Industrial Robotics','Drones','XR'];
+
+  // Barriers & drivers
+  const BAR_RU=['Нехватка финансирования','Нехватка ИТ-кадров','Сопротивление изменениям','Устаревшие системы','Сложности интеграции','Низкое качество данных','Регуляторные ограничения','Требования ИБ','Другое'];
+  const DRV_RU=['Поддержка руководства','Чёткие цели','Финансирование','Развитие компетенций','Роль ИТ','Запросы клиентов','Современные технологии','Другое'];
+  const BAR_EN=['Lack of funding','IT talent shortage','Resistance to change','Outdated systems','Integration complexity','Poor data quality','Regulatory constraints','Cybersecurity req','Other'];
+  const DRV_EN=['Leadership support','Clear goals','Funding','Competency dev','IT dept role','Customer demand','Modern technologies','Other'];
+  const bLbls = isRu ? BAR_RU : BAR_EN;
+  const dLbls = isRu ? DRV_RU : DRV_EN;
+  const barriers = (s4data.bar||[]).map(i=>bLbls[i]).filter(Boolean);
+  const drivers = (s4data.drv||[]).map(i=>dLbls[i]).filter(Boolean);
+
+  // Analyze answers
+  const critical = [], medium = [], strong = [];
+  answers.forEach((v,i)=>{
+    if(v===null) return;
+    if(v<=2) critical.push(qLbls[i]+'='+v);
+    else if(v===3) medium.push(qLbls[i]+'='+v);
+    else if(v>=4) strong.push(qLbls[i]+'='+v);
+  });
+
+  // Analyze tech adoption
+  const t1active=[], t1exp=[], t1low=[];
+  st1.forEach((v,i)=>{if(v===null)return; if(v>=4)t1active.push(T1[i]); else if(v>=2)t1exp.push(T1[i]); else t1low.push(T1[i]);});
+  const t2active=[], t2exp=[], t2low=[];
+  st2.forEach((v,i)=>{if(v===null)return; if(v>=4)t2active.push(T2[i]); else if(v>=2)t2exp.push(T2[i]); else t2low.push(T2[i]);});
+
+  const sorted = ds.map((s,i)=>({s,i})).sort((a,b)=>b.s-a.s);
+  const LEVELS=['Beginner','Emerging','Performing','Advancing','Expert'];
+  const lvIdx = LEVELS.indexOf(lv);
+  const nextLv = lvIdx<4 ? LEVELS[lvIdx+1] : null;
+  const nextScore = nextLv ? [1,1.5,2.5,3.5,4.5][lvIdx+1] : 5;
+
+  return {
+    industry, size, role, barriers, drivers,
+    critical, medium, strong,
+    t1active, t1exp, t1low,
+    t2active, t2exp, t2low,
+    sorted, lvIdx, nextLv, nextScore,
+    strongest: dimNames[sorted[0].i],
+    weakest: dimNames[sorted[sorted.length-1].i],
+    weak2: dimNames[sorted[sorted.length-2].i],
+    lvName: lvNames[lv],
+    nextLvName: nextLv ? lvNames[nextLv] : null,
+    score, ds, dimNames, isRu
+  };
+}
+
+function initChat(score, lv, ds, t, so) {
+  const isRu = lang === 'ru';
+  const ct = t.chat;
+  const lvNames = t.lv;
+  const dimNames = t.dn;
+  _chatData = {score,lv,ds,t,so,dimNames,lvNames,isRu};
+
+  const block = document.getElementById('chat-block');
+  if(block) block.style.display='block';
+
+  const el = id => document.getElementById(id);
+  if(el('chat-title-lbl')) el('chat-title-lbl').textContent=ct.title;
+  if(el('chips-lbl')) el('chips-lbl').textContent=ct.chipsLbl;
+  if(el('chat-input')) el('chat-input').placeholder=ct.placeholder;
+  if(el('chat-send-btn')) el('chat-send-btn').textContent=ct.send;
+  if(el('chat-note')) el('chat-note').textContent=ct.note;
+  if(el('chat-hist-lbl')) el('chat-hist-lbl').textContent=ct.histLbl;
+  if(el('save-chat-btn')) el('save-chat-btn').textContent=ct.saveChatBtn;
+
+  // Build greeting with personal context
+  const ctx = buildFullContext();
+  const greetingParts = [];
+  if(ctx.industry) greetingParts.push(isRu ? `отрасль: ${ctx.industry}` : `industry: ${ctx.industry}`);
+  if(ctx.size) greetingParts.push(isRu ? `размер: ${ctx.size}` : `size: ${ctx.size}`);
+  const personalCtx = greetingParts.length ? ` (${greetingParts.join(', ')})` : '';
+  const greeting = isRu
+    ? `Я изучил ваши результаты${personalCtx}. DMA ${score.toFixed(2)} — уровень ${ctx.lvName}. Сильная сторона: ${ctx.strongest}. Зона роста: ${ctx.weakest}. О чём хотите узнать подробнее?`
+    : `I reviewed your results${personalCtx}. DMA ${score.toFixed(2)} — ${ctx.lvName} level. Strength: ${ctx.strongest}. Growth area: ${ctx.weakest}. What would you like to know?`;
+  if(el('chat-greeting')) el('chat-greeting').textContent=greeting;
+
+  // Context tags
+  const ctxEl = el('chat-ctx');
+  if(ctxEl){
+    let tags=`<span class="ctx-tag ctx-hi">DMA: ${score.toFixed(2)}</span>`;
+    tags+=`<span class="ctx-tag ctx-hi">${ctx.lvName}${ctx.nextLvName?'→'+ctx.nextLvName:''}</span>`;
+    if(ctx.industry) tags+=`<span class="ctx-tag ctx-neu">${ctx.industry}</span>`;
+    if(ctx.size) tags+=`<span class="ctx-tag ctx-neu">${ctx.size}</span>`;
+    tags+=`<span class="ctx-tag ctx-hi">✦ ${ctx.strongest}: ${sorted_first(ds,dimNames)}</span>`;
+    tags+=`<span class="ctx-tag ctx-lo">◈ ${ctx.weakest}: ${sorted_last(ds,dimNames)}</span>`;
+    if(ctx.t1active.length) tags+=`<span class="ctx-tag ctx-hi">Tech: ${ctx.t1active.slice(0,2).join(', ')}</span>`;
+    if(ctx.t2exp.length) tags+=`<span class="ctx-tag ctx-neu">Exp: ${ctx.t2exp.slice(0,2).join(', ')}</span>`;
+    ctxEl.innerHTML=tags;
+  }
+
+  // Chips
+  const chipsEl = el('chips-grid');
+  if(chipsEl){
+    chipsEl.innerHTML = ct.chips.map((q,i)=>
+      `<div class="q-chip" onclick="selectChip(this,${i})">${q}</div>`
+    ).join('');
+  }
+}
+
+function sorted_first(ds,dn){const s=ds.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);return s[0].v.toFixed(2);}
+function sorted_last(ds,dn){const s=ds.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);return s[s.length-1].v.toFixed(2);}
+
+function selectChip(el, idx) {
+  document.querySelectorAll('.q-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  _lastQuestion = el.textContent||el.innerText||'';
+  showTyping();
+  setTimeout(()=>{ showResponse(buildChipResponse(idx)); }, 800);
+}
+
+function showTyping(){
+  const r=document.getElementById('chat-resp');
+  if(!r)return;
+  r.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+  r.classList.add('show');
+}
+let _chatHistory=[];
+let _lastQuestion='';
+
+function showResponse(text){
+  const r=document.getElementById('chat-resp');
+  if(!r)return;
+  r.innerHTML=text;
+  r.classList.add('show');
+  // Save to history
+  if(_lastQuestion){
+    _chatHistory.push({q:_lastQuestion, a:r.innerText||r.textContent||''});
+    renderHistory();
+    _lastQuestion='';
+  }
+}
+
+function renderHistory(){
+  const hist=document.getElementById('chat-history');
+  const items=document.getElementById('chat-hist-items');
+  if(!hist||!items||!_chatHistory.length) return;
+  hist.classList.add('has-items');
+  items.innerHTML=_chatHistory.map((item,i)=>`
+    <div class="chat-hist-item">
+      <div class="chat-hist-q">${i+1}. ${item.q}</div>
+      <div class="chat-hist-a">${item.a.substring(0,300)}${item.a.length>300?'...':''}</div>
+    </div>`).join('');
+}
+
+function buildChipResponse(idx){
+  const ctx = buildFullContext();
+  const {score,lv,ds,t,isRu,dimNames,lvNames} = _chatData;
+  const {industry,size,role,barriers,drivers,critical,medium,strong,
+         t1active,t1exp,t1low,t2active,t2exp,t2low,
+         sorted,lvIdx,nextLv,nextScore,strongest,weakest,weak2,lvName,nextLvName} = ctx;
+
+  const barTxt = barriers.length ? barriers.join(', ') : (isRu?'не указаны':'not specified');
+  const drvTxt = drivers.length ? drivers.join(', ') : (isRu?'не указаны':'not specified');
+  const indCtx = industry ? (isRu?` для ${industry}`:`for ${industry}`) : '';
+  const sizeCtx = size ? (isRu?`, организация ${size}`:`organisation ${size}`) : '';
+  const roleCtx = role ? (isRu?`. Вы — ${role}`:`. You are ${role}`) : '';
+
+  const R = isRu ? [
+    // 0: Почему такой балл
+    `<strong>Ваш балл ${score.toFixed(2)}/5.0${indCtx}${sizeCtx}${roleCtx}</strong><br><br>
+    DMA = (Point Maturity + Cluster Maturity) / 2. Point Maturity взвешивает все 33 ответа по весам модели Rasch — сложные вопроса весят больше.<br><br>
+    <strong>Что тянет вверх:</strong> ${strong.slice(0,4).join(' · ') || 'нет данных'}<br>
+    <strong>Что тянет вниз:</strong> ${critical.slice(0,4).join(' · ') || 'нет критичных'}<br><br>
+    Cluster Maturity: вы прошли кластеры 1–${Math.min(4,lvIdx+2)}, не дотянув до следующего — там самые сложные вопроса по ${weakest} и ${weak2}.`,
+
+    // 1: С чего начать
+    `<strong>С чего начать${indCtx}${sizeCtx}:</strong><br><br>
+    ${critical.length ? `🔴 <strong>Критичные пробелы (оценки 1–2):</strong><br>${critical.slice(0,5).map(c=>`• ${c}`).join('<br>')}<br><br>` : ''}
+    <strong>Первые три шага исходя из ваших данных:</strong><br>
+    1️⃣ <strong>${weakest}</strong> — ваше узкое место (${ds[sorted[sorted.length-1].i].toFixed(2)}/5.0). Начните с аудита конкретных процессов в этой зоне.<br>
+    2️⃣ <strong>Используйте драйверы:</strong> ${drvTxt} — это ваши рычаги. Начните там где уже есть поддержка.<br>
+    3️⃣ <strong>Быстрая победа</strong> — возьмите один критичный пробел и закройте за 1–2 месяца. Импульс важен${roleCtx ? '. '+role+' — именно вы можете инициировать это' : ''}.`,
+
+    // 2: Главные риски
+    `<strong>Главные риски в вашем профиле${indCtx}:</strong><br><br>
+    🔴 <strong>Структурный разрыв:</strong> ${strongest} (${sorted[0].s.toFixed(2)}) vs ${weakest} (${ds[sorted[sorted.length-1].i].toFixed(2)}) — разрыв ${(sorted[0].s-ds[sorted[sorted.length-1].i]).toFixed(2)} балла. Несбалансированность тормозит рост.<br><br>
+    🟡 <strong>Технологический риск:</strong> ${t1low.length ? `Базовые технологии не используются: ${t1low.join(', ')}` : t1exp.length ? `Ключевые технологии всё ещё в стадии эксперимента: ${t1exp.join(', ')}` : 'Базовый технологический стек хорошо освоен'}<br><br>
+    🟡 <strong>Барьеры:</strong> ${barTxt} — без системной работы с ними инициативы будут буксовать.<br><br>
+    ${critical.length>3 ? `⚠️ <strong>Много критичных пробелов:</strong> ${critical.length} вопросов с оценкой 1–2. Приоритизация обязательна.` : ''}`,
+
+    // 3: Следующий уровень
+    `<strong>${nextLvName ? `Переход: ${lvName} → ${nextLvName} (≥${nextScore}/5.0)` : 'Максимальный уровень!'}</strong><br><br>
+    ${nextLvName ? `Нужно <strong>+${(nextScore-score).toFixed(2)} балла</strong>. Конкретно для вашего профиля${indCtx}:<br><br>
+    • <strong>${weakest}</strong>: поднять с ${ds[sorted[sorted.length-1].i].toFixed(2)} до ≥${Math.min(ds[sorted[sorted.length-1].i]+0.8,4.5).toFixed(1)}<br>
+    • <strong>${weak2}</strong>: поднять с ${ds[sorted[sorted.length-2].i].toFixed(2)} до ≥${Math.min(ds[sorted[sorted.length-2].i]+0.6,4.5).toFixed(1)}<br>
+    • Закрыть критичные пробелы: ${critical.slice(0,3).map(c=>c.split('=')[0]).join(', ') || 'нет критичных'}<br><br>
+    ${t2exp.length ? `Также: масштабировать эксперименты с ${t2exp.slice(0,2).join(', ')} — это повышает TAM и влияет на DMA.` : ''}<br>
+    Реалистичный срок: <strong>12–18 месяцев</strong>.` : 'Фокус на поддержании и тиражировании лучших практик.'}`,
+
+    // 4: Барьеры
+    `<strong>Работа с барьерами${indCtx}:</strong><br><br>
+    Ваши барьеры: <strong>${barTxt}</strong><br>
+    Ваши драйверы: <strong>${drvTxt}</strong><br><br>
+    📌 Ключевой вывод исследования: барьеры слабо влияют на DMA — важнее драйверы. Не тратьте энергию на борьбу с барьерами, используйте драйверы.<br><br>
+    <strong>Конкретно для вас:</strong><br>
+    ${drivers.includes('Поддержка руководства')||drivers.includes('Leadership support') ? '✓ Поддержка руководства есть — используйте её для получения ресурсов на приоритетные инициативы.<br>' : ''}
+    ${drivers.includes('Роль ИТ')||drivers.includes('IT dept role') ? '✓ Сильная роль ИТ — инициируйте изменения через ИТ-подразделение.<br>' : ''}
+    ${barriers.includes('Устаревшие системы')||barriers.includes('Outdated systems') ? '⚠️ Legacy — оберните через API-слой вместо полной замены.<br>' : ''}
+    ${barriers.includes('Сложности интеграции')||barriers.includes('Integration complexity') ? '⚠️ Интеграция — приоритизируйте API Gateway как первый шаг.<br>' : ''}`,
+
+    // 5: Сравни с лидерами
+    `<strong>Ваш профиль vs Эксперты${indCtx}:</strong><br><br>
+    По данным исследования, Эксперты (верхние 29% выборки) показывают:<br>
+    ${dimNames.map((n,i)=>{
+      const expertScores=[4.53,4.50,4.37,4.42,4.66,4.47];
+      const diff=(expertScores[i]-ds[i]);
+      const sign=diff>0?'+':'';
+      return `• ${n}: вы <strong>${ds[i].toFixed(2)}</strong> / Эксперты ~${expertScores[i]} (${sign}${diff.toFixed(2)})`;
+    }).join('<br>')}<br><br>
+    🏆 <strong>Ваше преимущество:</strong> ${strongest} (${sorted[0].s.toFixed(2)}) — ${sorted[0].s>=4.5?'уже на уровне Эксперта!':'близко к уровню Эксперта.'}<br>
+    ${t1active.length ? `✓ Хорошо освоены технологии: ${t1active.join(', ')}` : ''}`,
+
+    // 6: Технологии
+    `<strong>Технологический профиль${indCtx}${sizeCtx}:</strong><br><br>
+    <strong>Оценка внедрения базовых технологий:</strong><br>
+    ${t1active.length ? `✅ Активно используются (≥4): <strong>${t1active.join(', ')}</strong>` : ''}<br>
+    ${t1exp.length ? `🔄 Экспериментируем (2–3): ${t1exp.join(', ')}` : ''}<br>
+    ${t1low.length ? `❌ Не используются (≤1): ${t1low.join(', ')}` : ''}<br><br>
+    <strong>Technology Adoption Maturity (перспективные) (новые технологии):</strong><br>
+    ${t2active.length ? `✅ Масштабно внедрено: <strong>${t2active.join(', ')}</strong>` : ''}<br>
+    ${t2exp.length ? `🔬 Экспериментируем: <strong>${t2exp.join(', ')}</strong> — это позитивный сигнал!` : ''}<br>
+    ${t2low.length ? `⏸ Пока не используем: ${t2low.slice(0,5).join(', ')}` : ''}<br><br>
+    <strong>Рекомендация:</strong> ${t2exp.length ? `Масштабируйте эксперименты с ${t2exp[0]} — это даст наибольший прирост к DMA.` : t1low.length ? `Закройте пробелы в базовых технологиях: ${t1low[0]} — приоритет.` : 'Технологический стек сбалансирован.'}`,
+
+    // 7: План 6 месяцев
+    `<strong>6-месячный план${indCtx}${sizeCtx} (DMA ${score.toFixed(2)} → цель ${nextScore}/5.0):</strong><br><br>
+    📌 <strong>М1–2:</strong> Аудит зоны ${weakest}. ${critical.length?`Закрыть критичные пробелы: ${critical.slice(0,2).map(c=>c.split('=')[0]).join(', ')}.`:''} Назначить владельцев инициатив.<br>
+    📌 <strong>М2–3:</strong> ${t2exp.length?`Масштабировать пилоты ${t2exp.slice(0,2).join(', ')}.`:'Запустить пилот в приоритетной технологии.'} Операционные дашборды.<br>
+    📌 <strong>М3–4:</strong> Работа с барьерами через драйверы. ${drvTxt.includes('руководства')||drvTxt.includes('support')?'Задействовать поддержку руководства для ресурсов.':''}<br>
+    📌 <strong>М4–5:</strong> Улучшение ${weak2}. Масштабирование успешных инициатив.<br>
+    📌 <strong>М6:</strong> Повторная оценка зрелости. Ожидаемый прирост: <strong>+0.3–0.5</strong>.<br><br>
+    ${nextLvName?`🎯 Цель: <strong>${nextLvName}</strong> (≥${nextScore}/5.0).`:''}`,
+
+    // 8: Emerging технологии
+    `<strong>Emerging технологии (Technology Adoption Maturity (перспективные)) — ваш профиль${indCtx}:</strong><br><br>
+    <strong>Technology Adoption Maturity (перспективные)</strong> = Technology Adoption Maturity для перспективных технологий (GenAI, ML, IoT и др.).<br><br>
+    ${t2active.length ? `✅ <strong>Уже масштабно внедрили:</strong> ${t2active.join(', ')} — отличный результат!<br><br>` : ''}
+    ${t2exp.length ? `🔬 <strong>Экспериментируете с:</strong> ${t2exp.join(', ')}<br>Исследование показало: даже эксперименты положительно влияют на DMA. Вы уже создаёте ценность.<br><br>` : ''}
+    ${t2low.length ? `⏸ <strong>Пока не используете:</strong> ${t2low.join(', ')}<br>` : ''}
+    <strong>Следующий шаг:</strong> ${t2exp.length ? `Выберите одну технологию из экспериментов (рекомендую <strong>${t2exp[0]}</strong>) и переведите в пилотный проект с измеримым результатом.` : 'Начните с малого — выделите innovation sandbox для одного Emerging-инструмента.'}`,
+
+    // 9: Сильные стороны
+    `<strong>Ваши конкурентные преимущества${indCtx}:</strong><br><br>
+    🏆 <strong>${strongest} — ${sorted[0].s.toFixed(2)}/5.0</strong><br>
+    🥈 <strong>${dimNames[sorted[1].i]} — ${sorted[1].s.toFixed(2)}/5.0</strong><br><br>
+    <strong>Технологические активы:</strong><br>
+    ${t1active.length ? `✅ Базовые технологии хорошо освоены: ${t1active.join(', ')}<br>` : ''}
+    ${t2active.length ? `✅ Emerging уже в продуктиве: ${t2active.join(', ')}<br>` : ''}
+    ${t2exp.length ? `🔬 Эксперименты с передовыми технологиями: ${t2exp.join(', ')}<br>` : ''}<br>
+    <strong>Самые высокие ответы:</strong><br>${strong.slice(0,5).map(s=>`• ${s}`).join('<br>')}<br><br>
+    💡 <strong>Стратегия:</strong> Масштабируйте практики ${strongest} на ${weakest}. Это быстрее чем строить с нуля.`,
+
+    // 10: Технологии для внедрения (новый)
+    `<strong>Какие технологии внедрять следующими${indCtx}:</strong><br><br>
+    На основе вашего текущего TAM-профиля и слабых измерений:<br><br>
+    ${t1low.length ? `🔴 <strong>Базовые пробелы — закрыть в первую очередь:</strong><br>${t1low.map(t=>`• ${t}`).join('<br>')}<br><br>` : ''}
+    ${t2exp.length ? `🟡 <strong>Масштабировать эксперименты:</strong><br>${t2exp.map(t=>`• ${t} → перевести в пилот`).join('<br>')}<br><br>` : ''}
+    <strong>Под ваши слабые измерения:</strong><br>
+    ${ds[sorted[sorted.length-1].i]<3.5 ? `• ${weakest}: рекомендую ${weakest.includes('Процесс')||weakest.includes('Process')?'Process Mining, RPA, BPM':weakest.includes('Стратег')||weakest.includes('Strategy')?'OKR-системы, цифровые roadmap-инструменты':weakest.includes('Клиент')||weakest.includes('Customer')?'CRM, CDP, чат-боты':'Data platforms, аналитика'}<br>` : ''}
+    ${ds[sorted[sorted.length-2].i]<3.5 ? `• ${weak2}: рекомендую ${weak2.includes('Технол')||weak2.includes('Tech')?'Microservices, Cloud, API Gateway':weak2.includes('Культур')||weak2.includes('Culture')?'LMS, платформы обучения':'BI/аналитика'}` : ''}`
+
+  ] : [
+    // EN responses — mirror structure with English content
+    `<strong>Your score ${score.toFixed(2)}/5.0${indCtx}${sizeCtx}${roleCtx}</strong><br><br>
+    DMA = (Point Maturity + Cluster Maturity) / 2. Point Maturity weights all 33 answers using Rasch model weights — harder questions carry more weight.<br><br>
+    <strong>Pulling score up:</strong> ${strong.slice(0,4).join(' · ') || 'no data'}<br>
+    <strong>Pulling score down:</strong> ${critical.slice(0,4).join(' · ') || 'no critical gaps'}<br><br>
+    Cluster Maturity: you passed clusters 1–${Math.min(4,lvIdx+2)}, falling short of the next — it contains the hardest questions on ${weakest} and ${weak2}.`,
+
+    `<strong>Where to start${indCtx}${sizeCtx}:</strong><br><br>
+    ${critical.length ? `🔴 <strong>Critical gaps (scores 1–2):</strong><br>${critical.slice(0,5).map(c=>`• ${c}`).join('<br>')}<br><br>` : ''}
+    <strong>First three steps based on your data:</strong><br>
+    1️⃣ <strong>${weakest}</strong> — your bottleneck (${ds[sorted[sorted.length-1].i].toFixed(2)}/5.0). Start with an audit of specific areas here.<br>
+    2️⃣ <strong>Leverage drivers:</strong> ${drvTxt} — your levers. Start where you already have support.<br>
+    3️⃣ <strong>Quick win</strong> — take one critical gap and close it in 1–2 months${roleCtx ? '. As '+role+', you can initiate this' : ''}.`,
+
+    `<strong>Main risks in your profile${indCtx}:</strong><br><br>
+    🔴 <strong>Structural gap:</strong> ${strongest} (${sorted[0].s.toFixed(2)}) vs ${weakest} (${ds[sorted[sorted.length-1].i].toFixed(2)}) — gap of ${(sorted[0].s-ds[sorted[sorted.length-1].i]).toFixed(2)} points.<br><br>
+    🟡 <strong>Technology risk:</strong> ${t1low.length ? `Core technologies not used: ${t1low.join(', ')}` : t1exp.length ? `Key technologies still experimenting: ${t1exp.join(', ')}` : 'Core tech stack well adopted'}<br><br>
+    🟡 <strong>Barriers:</strong> ${barTxt}<br><br>
+    ${critical.length>3 ? `⚠️ <strong>Many critical gaps:</strong> ${critical.length} questions scored 1–2. Prioritisation is essential.` : ''}`,
+
+    `<strong>${nextLvName ? `Transition: ${lvName} → ${nextLvName} (≥${nextScore}/5.0)` : 'Maximum level reached!'}</strong><br><br>
+    ${nextLvName ? `Need <strong>+${(nextScore-score).toFixed(2)} points</strong>. Specifically for your profile${indCtx}:<br><br>
+    • <strong>${weakest}</strong>: lift from ${ds[sorted[sorted.length-1].i].toFixed(2)} to ≥${Math.min(ds[sorted[sorted.length-1].i]+0.8,4.5).toFixed(1)}<br>
+    • <strong>${weak2}</strong>: lift from ${ds[sorted[sorted.length-2].i].toFixed(2)} to ≥${Math.min(ds[sorted[sorted.length-2].i]+0.6,4.5).toFixed(1)}<br>
+    • Close critical gaps: ${critical.slice(0,3).map(c=>c.split('=')[0]).join(', ') || 'none'}<br><br>
+    ${t2exp.length ? `Also: scale experiments with ${t2exp.slice(0,2).join(', ')} — boosts TAM which impacts DMA.` : ''}<br>
+    Realistic timeline: <strong>12–18 months</strong>.` : 'Focus on maintaining and scaling best practices.'}`,
+
+    `<strong>Working with barriers${indCtx}:</strong><br><br>
+    Your barriers: <strong>${barTxt}</strong><br>
+    Your drivers: <strong>${drvTxt}</strong><br><br>
+    📌 Key research finding: barriers have weak impact on DMA — drivers matter far more. Use drivers as levers.<br><br>
+    <strong>Specifically for you:</strong><br>
+    ${drivers.includes('Leadership support') ? '✓ Management support present — use it to secure resources.<br>' : ''}
+    ${drivers.includes('IT dept role') ? '✓ Strong IT role — drive change through IT department.<br>' : ''}
+    ${barriers.includes('Outdated systems') ? '⚠️ Legacy — wrap with API layer instead of full replacement.<br>' : ''}
+    ${barriers.includes('Integration complexity') ? '⚠️ Integration — prioritise API Gateway as first step.<br>' : ''}`,
+
+    `<strong>Your profile vs Expert level${indCtx}:</strong><br><br>
+    ${dimNames.map((n,i)=>{
+      const e=[4.53,4.50,4.37,4.42,4.66,4.47];
+      const d=(e[i]-ds[i]);
+      return `• ${n}: you <strong>${ds[i].toFixed(2)}</strong> / Expert ~${e[i]} (${d>0?'+':''}${d.toFixed(2)})`;
+    }).join('<br>')}<br><br>
+    🏆 <strong>Your advantage:</strong> ${strongest} (${sorted[0].s.toFixed(2)}) — ${sorted[0].s>=4.5?'already at Expert level!':'close to Expert level.'}<br>
+    ${t1active.length ? `✓ Well-adopted technologies: ${t1active.join(', ')}` : ''}`,
+
+    `<strong>Technology profile${indCtx}${sizeCtx}:</strong><br><br>
+    <strong>Technology Adoption Maturity (базовые) (basic technologies):</strong><br>
+    ${t1active.length ? `✅ Widely adopted (≥4): <strong>${t1active.join(', ')}</strong>` : ''}<br>
+    ${t1exp.length ? `🔄 Experimenting (2–3): ${t1exp.join(', ')}` : ''}<br>
+    ${t1low.length ? `❌ Not used (≤1): ${t1low.join(', ')}` : ''}<br><br>
+    <strong>Technology Adoption Maturity (перспективные) (advanced technologies):</strong><br>
+    ${t2active.length ? `✅ Widely deployed: <strong>${t2active.join(', ')}</strong>` : ''}<br>
+    ${t2exp.length ? `🔬 Experimenting: <strong>${t2exp.join(', ')}</strong> — positive signal!` : ''}<br>
+    ${t2low.length ? `⏸ Not yet used: ${t2low.slice(0,5).join(', ')}` : ''}<br><br>
+    <strong>Recommendation:</strong> ${t2exp.length ? `Scale ${t2exp[0]} experiments — highest DMA impact.` : t1low.length ? `Close core gap: ${t1low[0]} is priority.` : 'Technology stack is balanced.'}`,
+
+    `<strong>6-month plan${indCtx}${sizeCtx} (DMA ${score.toFixed(2)} → target ${nextScore}/5.0):</strong><br><br>
+    📌 <strong>M1–2:</strong> Audit ${weakest} zone. ${critical.length?`Close critical gaps: ${critical.slice(0,2).map(c=>c.split('=')[0]).join(', ')}.`:''} Assign owners.<br>
+    📌 <strong>M2–3:</strong> ${t2exp.length?`Scale pilots: ${t2exp.slice(0,2).join(', ')}.`:'Launch one priority technology pilot.'} Operational dashboards.<br>
+    📌 <strong>M3–4:</strong> Address barriers using drivers. ${drvTxt.includes('support')?'Leverage management support for resources.':''}<br>
+    📌 <strong>M4–5:</strong> Improve ${weak2}. Scale successful initiatives.<br>
+    📌 <strong>M6:</strong> Re-assessment. Expected gain: <strong>+0.3–0.5</strong>.<br><br>
+    ${nextLvName?`🎯 Target: <strong>${nextLvName}</strong> (≥${nextScore}/5.0).`:''}`,
+
+    `<strong>Emerging technologies (Technology Adoption Maturity (перспективные)) — your profile${indCtx}:</strong><br><br>
+    <strong>Technology Adoption Maturity (перспективные)</strong> = Technology Adoption Maturity for advanced technologies (GenAI, ML, IoT etc.).<br><br>
+    ${t2active.length ? `✅ <strong>Already widely deployed:</strong> ${t2active.join(', ')} — excellent!<br><br>` : ''}
+    ${t2exp.length ? `🔬 <strong>Experimenting with:</strong> ${t2exp.join(', ')}<br>Research shows: even experiments positively impact DMA. You are already creating value.<br><br>` : ''}
+    ${t2low.length ? `⏸ <strong>Not yet using:</strong> ${t2low.join(', ')}<br>` : ''}
+    <strong>Next step:</strong> ${t2exp.length ? `Pick one experiment (recommend <strong>${t2exp[0]}</strong>) and build a measurable pilot.` : 'Start small — allocate an innovation sandbox for one Emerging tool.'}`,
+
+    `<strong>Your competitive advantages${indCtx}:</strong><br><br>
+    🏆 <strong>${strongest} — ${sorted[0].s.toFixed(2)}/5.0</strong><br>
+    🥈 <strong>${dimNames[sorted[1].i]} — ${sorted[1].s.toFixed(2)}/5.0</strong><br><br>
+    <strong>Technology assets:</strong><br>
+    ${t1active.length ? `✅ Core tech well adopted: ${t1active.join(', ')}<br>` : ''}
+    ${t2active.length ? `✅ Emerging in production: ${t2active.join(', ')}<br>` : ''}
+    ${t2exp.length ? `🔬 Experimenting with: ${t2exp.join(', ')}<br>` : ''}<br>
+    <strong>Highest-scored answers:</strong><br>${strong.slice(0,5).map(s=>`• ${s}`).join('<br>')}<br><br>
+    💡 <strong>Strategy:</strong> Scale ${strongest} practices into ${weakest}. Faster than building from scratch.`,
+
+    `<strong>Which technologies to adopt next${indCtx}:</strong><br><br>
+    Based on your TAM profile and weak dimensions:<br><br>
+    ${t1low.length ? `🔴 <strong>Core gaps — address first:</strong><br>${t1low.map(t=>`• ${t}`).join('<br>')}<br><br>` : ''}
+    ${t2exp.length ? `🟡 <strong>Scale experiments:</strong><br>${t2exp.map(t=>`• ${t} → move to pilot`).join('<br>')}<br><br>` : ''}
+    <strong>Matched to your weak dimensions:</strong><br>
+    ${ds[sorted[sorted.length-1].i]<3.5 ? `• ${weakest}: recommend ${weakest.includes('Process')?'Process Mining, RPA, BPM':weakest.includes('Strategy')?'OKR tools, digital roadmap platforms':weakest.includes('Customer')?'CRM, CDP, chatbots':'Data platforms, analytics'}<br>` : ''}
+    ${ds[sorted[sorted.length-2].i]<3.5 ? `• ${weak2}: recommend ${weak2.includes('Tech')?'Microservices, Cloud, API Gateway':weak2.includes('Culture')?'LMS, learning platforms':'BI/analytics'}` : ''}`
+  ];
+  return R[idx] || (isRu?'Задайте более конкретный вопрос.':'Please ask a more specific question.');
+}
+
+async function sendChat(){
+  const input=document.getElementById('chat-input');
+  if(!input)return;
+  const q=input.value.trim();
+  if(!q)return;
+  _lastQuestion=q;
+  input.value='';
+  showTyping();
+
+  const ctx=buildFullContext();
+  const {score,lv,ds,isRu,dimNames,lvNames}=_chatData;
+  const {industry,size,role,barriers,drivers,critical,strong,t1active,t1exp,t2active,t2exp,strongest,weakest,lvName,nextLvName,nextScore}=ctx;
+
+  const systemPrompt=isRu
+    ?`Ты — AI-агент оценки цифровой зрелости. Отвечай конкретно, на основе данных респондента. Максимум 5 предложений. Используй данные контекста. Не используй общие фразы.`
+    :`You are a digital maturity assessment AI agent. Answer specifically based on respondent data. Max 5 sentences. Use context data. No generic phrases.`;
+
+  const contextStr=isRu
+    ?`Профиль: DMA=${score.toFixed(2)}, уровень=${lvName}${nextLvName?', цель='+nextLvName+'(≥'+nextScore+')':''}, отрасль="${industry||'н/д'}", размер="${size||'н/д'}", роль="${role||'н/д'}".
+Измерения: ${dimNames.map((n,i)=>n+':'+ds[i].toFixed(2)).join(', ')}.
+Слабейшие: ${weakest}, ${ctx.weak2}.
+Критичные пробелы (оценки 1-2): ${critical.slice(0,6).join('; ')||'нет'}.
+Сильные стороны: ${strong.slice(0,4).join('; ')||'нет'}.
+Базовые тех активно: ${t1active.join(', ')||'нет'}. Базовые тех эксперимент: ${t1exp.join(', ')||'нет'}.
+Emerging активно: ${t2active.join(', ')||'нет'}. Emerging эксперимент: ${t2exp.join(', ')||'нет'}.
+Барьеры: ${barriers.join(', ')||'нет'}. Драйверы: ${drivers.join(', ')||'нет'}.
+Вопрос: ${q}`
+    :`Profile: DMA=${score.toFixed(2)}, level=${lvName}${nextLvName?', target='+nextLvName+'(≥'+nextScore+')':''}, industry="${industry||'n/a'}", size="${size||'n/a'}", role="${role||'n/a'}".
+Dimensions: ${dimNames.map((n,i)=>n+':'+ds[i].toFixed(2)).join(', ')}.
+Weakest: ${weakest}, ${ctx.weak2}.
+Critical gaps (scores 1-2): ${critical.slice(0,6).join('; ')||'none'}.
+Strengths: ${strong.slice(0,4).join('; ')||'none'}.
+Core tech active: ${t1active.join(', ')||'none'}. Core tech experimenting: ${t1exp.join(', ')||'none'}.
+Emerging active: ${t2active.join(', ')||'none'}. Emerging experimenting: ${t2exp.join(', ')||'none'}.
+Barriers: ${barriers.join(', ')||'none'}. Drivers: ${drivers.join(', ')||'none'}.
+Question: ${q}`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
+    });
+    const d=await r.json();
+    const txt=d.content?.map(c=>c.text||'').join('')||'';
+    showResponse(txt||(isRu?'Не удалось получить ответ.':'Could not get response.'));
+  }catch(e){
+    showResponse(isRu
+      ?'Для свободного диалога откройте агент в Claude.ai. Кнопки-вопросы выше работают без API.'
+      :'For free dialogue open the agent in Claude.ai. Question buttons above work without API.');
+  }
+}
+
+
+function saveChatPDF(){
+  const isRu=lang==='ru';
+  if(!_chatHistory.length){
+    alert(isRu?'История консультации пуста.':'Consultation history is empty.');
+    return;
+  }
+  const d=window._exportData;
+  const now=new Date();
+  const dateStr=`${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()}`;
+  const score=d?d.score:'—';
+  const level=d?d.level:'—';
+  const LEVELS_RU={Beginner:'Начальный',Emerging:'Формирующийся',Performing:'Развивающийся',Advancing:'Продвинутый',Expert:'Эксперт'};
+  const lvName=isRu?(LEVELS_RU[level]||level):level;
+
+  const histHTML=_chatHistory.map((item,i)=>`
+    <div style="margin-bottom:16px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+      <div style="background:#f1f5f9;padding:8px 14px;font-size:12px;font-weight:700;color:#0f172a;border-bottom:1px solid #e2e8f0">
+        ${i+1}. ${item.q}
+      </div>
+      <div style="padding:10px 14px;font-size:12px;color:#374151;line-height:1.7">${item.a}</div>
+    </div>`).join('');
+
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>${isRu?'Консультация AI-агента':'AI Agent Consultation'}</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:'Segoe UI',Arial,sans-serif;color:#0f172a;padding:32px;max-width:780px;margin:0 auto}
+      .header-bar{height:4px;background:linear-gradient(90deg,#2563eb,#0891b2);margin-bottom:20px;border-radius:2px}
+      h1{font-size:20px;font-weight:800;margin-bottom:4px}
+      .meta{font-size:12px;color:#64748b;margin-bottom:20px}
+      .score-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+      .score-chip{padding:5px 14px;border-radius:10px;font-size:12px;font-weight:700;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+      .section-title{font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748b;margin:20px 0 10px;text-transform:uppercase;border-bottom:1px solid #e2e8f0;padding-bottom:6px}
+      .footer{margin-top:28px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between}
+      @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+    </style>
+  </head><body>
+    <div class="header-bar"></div>
+    <h1>${isRu?'Консультация AI-агента по результатам оценки':'AI Agent Consultation on Assessment Results'}</h1>
+    <div class="meta">Digital Maturity Assessment · ${dateStr}</div>
+    <div class="score-row">
+      <span class="score-chip">DMA: ${typeof score==='number'?score.toFixed(2):score}/5.0</span>
+      <span class="score-chip">${lvName}</span>
+      <span class="score-chip">${isRu?`${_chatHistory.length} вопросов`:`${_chatHistory.length} questions`}</span>
+    </div>
+    <div class="section-title">${isRu?'История консультации с AI-агентом':'AI Agent Consultation History'}</div>
+    ${histHTML}
+    <div class="footer">
+      <span>Digital Maturity Assessment · Developed by Zhanl Mamykova · mamykova2021@gmail.com</span>
+      <span>${dateStr}</span>
+    </div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+</script>
+</body>
+</html>
