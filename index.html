@@ -200,13 +200,14 @@ td.scc.sel .rbd{display:block}
 .q-chip{background:var(--sf);border:0.5px solid var(--bd);border-radius:14px;padding:5px 11px;font-size:11px;cursor:pointer;transition:all .15s;color:var(--tx);line-height:1.4}
 .q-chip:hover{border-color:var(--ac);background:#eff6ff;color:var(--ac)}
 .q-chip.active{border-color:var(--ac);background:#eff6ff;color:var(--ac)}
-.chat-response{display:none;background:var(--sf);border:0.5px solid var(--bd);border-radius:9px;padding:10px 13px;margin-bottom:8px;font-size:12px;line-height:1.7;color:var(--tx)}
+.chat-response{display:none;background:var(--sf);border:0.5px solid var(--bd);border-radius:9px;padding:14px 16px;margin-bottom:8px;font-size:12px;line-height:1.7;color:var(--tx);max-height:600px;overflow-y:auto}
 .chat-response.show{display:block}
 .typing-dots{display:flex;align-items:center;gap:3px;padding:2px 0}
 .typing-dots span{width:5px;height:5px;border-radius:50%;background:#94a3b8;animation:tdot .8s infinite}
 .typing-dots span:nth-child(2){animation-delay:.15s}
 .typing-dots span:nth-child(3){animation-delay:.3s}
 @keyframes tdot{0%,80%,100%{transform:scale(1)}40%{transform:scale(1.4)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .chat-input-row{display:flex;gap:7px}
 .chat-input{flex:1;padding:8px 12px;border:0.5px solid var(--bd);border-radius:18px;font-family:'Manrope',sans-serif;font-size:12px;color:var(--tx);background:var(--sf);outline:none}
 .chat-input:focus{border-color:var(--ac)}
@@ -417,9 +418,23 @@ td.scc.sel .rbd{display:block}
       <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:5px" id="ty-title"></div>
       <div style="font-size:11px;color:#047857;line-height:1.6" id="ty-text"></div>
     </div>
+    <div style="margin-top:14px;background:linear-gradient(135deg,#1e3a8a 0%,#0f766e 100%);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em;margin-bottom:5px" id="its-cta-label">🗺 РАЗРАБОТАТЬ ИТ-СТРАТЕГИЮ</div>
+      <div style="font-size:11px;color:#bfdbfe;margin-bottom:11px;line-height:1.5" id="its-cta-desc">На основе результатов DMA — полноценная ИТ-стратегия через диалог с AI-консультантом</div>
+      <button onclick="startITStrategy()" style="background:#fff;color:#1e3a8a;border:none;border-radius:8px;padding:8px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif" id="its-cta-btn">Начать →</button>
+    </div>
     <div class="rf" style="margin-top:10px">
       Digital Maturity Assessment · Developed by <strong>Zhanl Mamykova</strong> · <a href="mailto:mamykova2021@gmail.com" style="color:var(--ac);text-decoration:none">mamykova2021@gmail.com</a> · <a onclick="goSc('about-sc')" style="color:var(--ac);cursor:pointer;text-decoration:none">About the project</a>
     </div>
+  </div>
+</div>
+
+<div id="its-sc" class="sc">
+  <div class="hdr"><div class="logo">DMA · <span>IT Strategy</span></div><div class="htitle" id="its-hdr-title"></div><div class="hpct" id="its-hdr-pct"></div></div>
+  <div class="pw"><div class="pb" id="its-pb" style="width:5%"></div></div>
+  <div class="rb2">
+    <div id="its-body" style="min-height:340px"></div>
+    <div id="its-foot" style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"></div>
   </div>
 </div>
 
@@ -620,6 +635,7 @@ async function setLang(l){
   lang=l;await lc();
   const sv=await lp();
   if(sv&&ans.some(a=>a!==null)){document.getElementById('rn').textContent=T[lang].rv;}
+  if(typeof itsUpdateLang==='function') itsUpdateLang();
   renderConsent();goSc('consent-sc');
 }
 function renderConsent(){
@@ -839,6 +855,8 @@ function calc(){
   if(tyText) tyText.textContent=ty.text;
   // Store result data for export
   window._exportData={score:ov,level:lv,dimScores:ds,dimNames:t.dn,recs:document.getElementById('ait')?document.getElementById('ait').innerText:'',barriers:s4.bar,drivers:s4.drv,lang,ans,s1,s4,s2t1,s2t2,t1avg,t2avg,tamDT,consentGiven};
+  // Update IT Strategy CTA language
+  if(typeof itsUpdateLang==='function') itsUpdateLang();
 }
 
 function showLocalRecs(score,lv,ds,t,so){
@@ -1384,6 +1402,70 @@ function selectChip(el, idx) {
   setTimeout(()=>{ showResponse(buildChipResponse(idx)); }, 800);
 }
 
+
+// ── Markdown → HTML renderer ──────────────────────────────
+function mdToHtml(text){
+  if(!text) return '';
+  // Tables: | col | col | -> <table>
+  const lines = text.split('\n');
+  const out = [];
+  let inTable = false;
+  let tableRows = [];
+
+  function flushTable(){
+    if(!tableRows.length) return;
+    // First row = header, second row = separator (---)
+    const rows = tableRows.filter(r => !r.match(/^\|[-| :]+\|$/));
+    let html = '<div style="overflow-x:auto;margin:10px 0"><table style="width:100%;border-collapse:collapse;font-size:11px">';
+    rows.forEach((row, ri) => {
+      const cells = row.split('|').slice(1,-1).map(c=>c.trim());
+      const tag = ri===0 ? 'th' : 'td';
+      const bg = ri===0 ? 'background:#1e3a8a;color:#fff' : (ri%2===0?'background:#f8fafc':'background:#fff');
+      html += '<tr>' + cells.map(c=>`<${tag} style="padding:6px 9px;border:1px solid #e2e8f0;${bg};text-align:left">${inlineFormat(c)}</${tag}>`).join('') + '</tr>';
+    });
+    html += '</table></div>';
+    out.push(html);
+    tableRows = [];
+    inTable = false;
+  }
+
+  for(let i=0; i<lines.length; i++){
+    const line = lines[i];
+    if(line.match(/^\|.+\|$/)){
+      inTable = true;
+      tableRows.push(line);
+    } else {
+      if(inTable) flushTable();
+      // Headers
+      if(line.match(/^### /)) out.push(`<h4 style="font-size:12px;font-weight:700;color:#334155;margin:12px 0 4px">${inlineFormat(line.slice(4))}</h4>`);
+      else if(line.match(/^## /)) out.push(`<h3 style="font-size:14px;font-weight:800;color:#1e3a8a;margin:16px 0 6px;padding-bottom:4px;border-bottom:2px solid #dbeafe">${inlineFormat(line.slice(3))}</h3>`);
+      else if(line.match(/^# /)) out.push(`<h2 style="font-size:16px;font-weight:800;color:#1e3a8a;margin:18px 0 8px;padding-bottom:5px;border-bottom:3px solid #1e3a8a">${inlineFormat(line.slice(2))}</h2>`);
+      // Bullets
+      else if(line.match(/^[\-\*] /)) out.push(`<div style="display:flex;gap:8px;margin:3px 0 3px 8px"><span style="color:#0f766e;font-weight:700;flex-shrink:0">•</span><span style="font-size:12px;color:#334155;line-height:1.6">${inlineFormat(line.slice(2))}</span></div>`);
+      else if(line.match(/^\d+\. /)) out.push(`<div style="display:flex;gap:8px;margin:3px 0 3px 8px"><span style="color:#1e3a8a;font-weight:700;flex-shrink:0;min-width:18px">${line.match(/^(\d+)\./)[ 1]}.</span><span style="font-size:12px;color:#334155;line-height:1.6">${inlineFormat(line.replace(/^\d+\. /,''))}</span></div>`);
+      // Bold section labels like **Quick Wins:**
+      else if(line.match(/^\*\*.*\*\*$/)) out.push(`<div style="font-size:12px;font-weight:700;color:#0f172a;margin:10px 0 4px">${inlineFormat(line)}</div>`);
+      // Empty line → spacing
+      else if(line.trim()==='') out.push('<div style="height:6px"></div>');
+      // Normal paragraph
+      else out.push(`<div style="font-size:12px;color:#334155;line-height:1.7;margin:2px 0">${inlineFormat(line)}</div>`);
+    }
+  }
+  if(inTable) flushTable();
+  return out.join('');
+}
+
+function inlineFormat(text){
+  return text
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code style="background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11px;font-family:monospace">$1</code>')
+    .replace(/→/g,'<span style="color:#0f766e">→</span>')
+    .replace(/Run/g,'<span style="background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700">Run</span>')
+    .replace(/Grow/g,'<span style="background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700">Grow</span>')
+    .replace(/Transform/g,'<span style="background:#ede9fe;color:#5b21b6;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700">Transform</span>');
+}
+// ─────────────────────────────────────────────────────────
 function showTyping(){
   const r=document.getElementById('chat-resp');
   if(!r)return;
@@ -1667,63 +1749,28 @@ Emerging active: ${t2active.join(', ')||'none'}. Emerging experimenting: ${t2exp
 Barriers: ${barriers.join(', ')||'none'}. Drivers: ${drivers.join(', ')||'none'}.
 Question: ${q}`;
 
-  try {
-  const r = await fetch('https://dark-base-9669.aizhir-mt.workers.dev/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 700,
-      system: systemPrompt,
-      messages: [
-        {
-          role: 'user',
-          content: contextStr,
-        },
-      ],
-    }),
-  });
-
-  const raw = await r.text();
-
-  console.log('Worker status:', r.status);
-  console.log('Worker raw response:', raw);
-
-  let d;
-
-  try {
-    d = JSON.parse(raw);
-  } catch (e) {
-    showResponse(isRu ? 'Worker вернул не JSON-ответ.' : 'Worker returned non-JSON response.');
-    return;
+  try{
+    const r=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
+    });
+    const raw=await r.text();
+    let d;
+    try{d=JSON.parse(raw);}catch(e){
+      showResponse(isRu?'Сервис вернул некорректный ответ.':'Service returned invalid response.');
+      return;
+    }
+    if(!r.ok){
+      showResponse(isRu?`Ошибка: ${d?.error?.message||'неизвестная ошибка'}`:`Error: ${d?.error?.message||'unknown error'}`);
+      return;
+    }
+    const txt=d.content?.map(c=>c.text||'').join('')||'';
+    showResponse(mdToHtml(txt)||(isRu?'Не удалось получить ответ.':'Could not get response.'));
+  }catch(e){
+    showResponse(isRu
+      ?'Не удалось подключиться к AI-сервису. Проверьте Worker и CORS.'
+      :'Could not connect to AI service. Check Worker and CORS.');
   }
-
-  if (!r.ok) {
-    console.error('Worker/Anthropic error:', d);
-
-    showResponse(
-      isRu
-        ? `Ошибка AI-сервиса: ${d?.error?.message || d?.message || 'неизвестная ошибка'}`
-        : `AI service error: ${d?.error?.message || d?.message || 'unknown error'}`,
-    );
-
-    return;
-  }
-
-  const txt = d.content?.map(c => c.text || '').join('') || '';
-
-  showResponse(txt || (isRu ? 'Не удалось получить ответ.' : 'Could not get response.'));
-} catch (e) {
-  console.error('Fetch error:', e);
-
-  showResponse(
-    isRu
-      ? 'Не удалось подключиться к AI-сервису. Проверьте Worker и CORS.'
-      : 'Could not connect to the AI service. Check Worker and CORS.',
-  );
-}
 }
 
 
@@ -1782,6 +1829,670 @@ function saveChatPDF(){
   </body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
+}
+
+
+// ═══════════════════════════════════════════════════════════
+//  IT STRATEGY MODE — v3  (RU + EN, Screen 7, 3 PDF exports)
+// ═══════════════════════════════════════════════════════════
+
+// ── Texts ──────────────────────────────────────────────────
+const ITS_T = {
+  ru:{
+    btnLabel:'🗺 РАЗРАБОТАТЬ ИТ-СТРАТЕГИЮ',
+    btnDesc:'На основе результатов DMA — полноценная ИТ-стратегия через диалог с AI-консультантом',
+    btnStart:'Начать →',
+    hdrTitle:'ИТ-стратегия · Консультация',
+    hdrSub:'Discovery Interview → Стратегия → Документы',
+    introTitle:'Добро пожаловать в режим ИТ-стратегии',
+    introDesc:'Я выступаю в роли вашего ИТ-консультанта. На основе результатов оценки цифровой зрелости задам несколько вопросов по слабым измерениям и помогу разработать практическую ИТ-стратегию.',
+    introWhat:'Что будет происходить:',
+    introSteps:['🎯 Шаг 1 — Discovery Interview: адаптивные вопросы по слабым измерениям','📋 Шаг 2 — Генерация ИТ-стратегии на основе ваших данных','📄 Шаг 3 — Три документа для скачивания в PDF'],
+    btnBegin:'Начать интервью →',
+    btnBack:'← Назад',
+    btnSkip:'Пропустить',
+    btnNext:'Следующий вопрос →',
+    btnFinish:'Завершить интервью →',
+    selHint:'Выберите один или несколько вариантов — и/или напишите своё:',
+    otherLabel:'Другое (напишите своё):',
+    otherPlaceholder:'Ваш ответ...',
+    generating:'Формирую ИТ-стратегию...',
+    generatingDesc:'Анализирую данные DMA и ответы интервью, формирую инициативы Run / Grow / Transform и дорожную карту.',
+    readyTitle:'ИТ-стратегия сформирована',
+    readyDesc:'Стратегия готова на основе ваших данных DMA и ответов интервью.',
+    dlDma:'📄 Скачать: Оценка цифровой зрелости (PDF)',
+    dlProtocol:'📋 Скачать: Протокол беседы (PDF)',
+    dlStrategy:'🗺 Скачать: ИТ-стратегия (PDF)',
+    backToResults:'← Вернуться к результатам',
+    dimNames:['Цифровая стратегия','Организация и лидерство','Культура и компетенции','Клиенты','Процессы','Технологии'],
+    levels:{Beginner:'Начальный',Emerging:'Формирующийся',Performing:'Развивающийся',Advancing:'Продвинутый',Expert:'Эксперт'},
+    weakLabel:'Слабые измерения',
+    dmaLabel:'Уровень цифровой зрелости',
+    apiError:'Нет подключения к API. Документы интервью доступны для скачивания.',
+    qLabel:'Вопрос',
+    of:'из',
+    block:'Блок',
+    prevLabel:'Предыдущий ответ:',
+  },
+  en:{
+    btnLabel:'🗺 DEVELOP IT STRATEGY',
+    btnDesc:'Based on DMA results — a full IT strategy through dialogue with an AI consultant',
+    btnStart:'Start →',
+    hdrTitle:'IT Strategy · Consultation',
+    hdrSub:'Discovery Interview → Strategy → Documents',
+    introTitle:'Welcome to IT Strategy mode',
+    introDesc:'I act as your IT consultant. Based on your Digital Maturity Assessment results I will ask targeted questions about weak dimensions and help develop a practical IT strategy.',
+    introWhat:'What will happen:',
+    introSteps:['🎯 Step 1 — Discovery Interview: adaptive questions on weak dimensions','📋 Step 2 — IT Strategy generation based on your data','📄 Step 3 — Three documents available for PDF download'],
+    btnBegin:'Start interview →',
+    btnBack:'← Back',
+    btnSkip:'Skip',
+    btnNext:'Next question →',
+    btnFinish:'Finish interview →',
+    selHint:'Select one or more options — and/or write your own:',
+    otherLabel:'Other (write your own):',
+    otherPlaceholder:'Your answer...',
+    generating:'Generating IT strategy...',
+    generatingDesc:'Analysing DMA data and interview answers, forming Run / Grow / Transform initiatives and roadmap.',
+    readyTitle:'IT Strategy is ready',
+    readyDesc:'Strategy generated based on your DMA data and interview answers.',
+    dlDma:'📄 Download: Digital Maturity Assessment (PDF)',
+    dlProtocol:'📋 Download: Interview Protocol (PDF)',
+    dlStrategy:'🗺 Download: IT Strategy (PDF)',
+    backToResults:'← Back to results',
+    dimNames:['Digital Strategy','Organisation & Leadership','Culture & Competencies','Customers','Processes','Technology'],
+    levels:{Beginner:'Beginner',Emerging:'Emerging',Performing:'Performing',Advancing:'Advancing',Expert:'Expert'},
+    weakLabel:'Weak dimensions',
+    dmaLabel:'Digital Maturity Level',
+    apiError:'API not available. Interview documents are ready for download.',
+    qLabel:'Question',
+    of:'of',
+    block:'Block',
+    prevLabel:'Previous answer:',
+  }
+};
+
+// ── Interview question bank (RU + EN) ──────────────────────
+const ITS_BLOCKS = {
+  A1:{
+    block:{ru:'Блок А · Операционные потери',en:'Block A · Operational Losses'},
+    dim:'Процессы / Processes',
+    ru:{q:'На что уходит больше всего рабочего времени сотрудников — но не должно?',
+      opts:['Ручная подготовка регулярных отчётов и сводок','Согласование документов через почту или мессенджеры','Повторный ввод одних и тех же данных в разные системы или файлы','Поиск актуальной информации — по письмам, папкам, чатам','Ожидание ответа или подтверждения от другого подразделения','Исправление ошибок из-за расхождения данных в разных источниках']},
+    en:{q:'Where does your team spend the most working time — but should not?',
+      opts:['Manual preparation of regular reports and summaries','Document approvals via email or messengers','Entering the same data repeatedly into different systems or files','Searching for current information across emails, folders, chats','Waiting for responses or approvals from other departments','Correcting errors caused by data discrepancies across sources']}
+  },
+  A2:{
+    block:{ru:'Блок А · Операционные потери',en:'Block A · Operational Losses'},
+    dim:'Процессы / Processes',
+    ru:{q:'Какие процессы до сих пор выполняются вручную или в Excel — хотя давно должны быть автоматизированы?',
+      opts:['Регистрация и учёт данных — ввод в таблицы, журналы, ручные реестры','Сбор и консолидация производственных, операционных или технологических данных','Формирование регулярной отчётности — оперативной, управленческой, регуляторной','Согласование документов: договоры, заявки, наряды, акты','Контроль исполнения поручений, сроков, регламентных процедур','Обработка заявок и обращений — внутренних или внешних','Расчёты и начисления, которые делаются вручную в Excel','Передача данных между подразделениями через файлы или почту']},
+    en:{q:'Which processes are still done manually or in Excel — though they should have been automated long ago?',
+      opts:['Data registration and recording — tables, logs, manual registers','Collection and consolidation of production, operational or process data','Preparation of regular reports — operational, management, regulatory','Document approvals: contracts, purchase requests, work orders, acts','Tracking execution of instructions, deadlines, regulatory procedures','Processing internal or external requests and inquiries','Calculations done manually in Excel','Data transfer between departments via files or email']}
+  },
+  B1:{
+    block:{ru:'Блок Б · Системный ландшафт',en:'Block B · System Landscape'},
+    dim:'Технологии / Technology',
+    ru:{q:'Какие корпоративные системы сотрудники намеренно обходят — и выполняют ту же работу в Excel или вручную?',
+      opts:['CRM: учёт клиентов и сделок ведут в таблицах, а не в системе','ERP / учётная система: слишком сложна, дублируют в Excel','Система электронного документооборота: проще отправить письмо','Система управления задачами и проектами: не прижилась, переписываются в мессенджерах','Система кадрового учёта: оформление кадровых операций идёт по почте или на бумаге','Профильные отраслевые системы: нет нужного функционала, работают в обход','Нет корпоративных систем по этому направлению — работаем в Excel и почте']},
+    en:{q:'Which corporate systems do employees intentionally bypass — and do the same work in Excel or manually?',
+      opts:['CRM: client and deal records kept in spreadsheets, not in the system','ERP / accounting system: too complex, duplicated in Excel','Electronic document management: easier to send an email','Task and project management system: not adopted, communication stays in messengers','HR system: HR operations processed via email or paper','Industry-specific systems: missing needed functionality, worked around','No corporate systems in this area — everything done in Excel and email']}
+  },
+  B2:{
+    block:{ru:'Блок Б · Системный ландшафт',en:'Block B · System Landscape'},
+    dim:'Технологии / Technology',
+    ru:{q:'Как устроена интеграция между системами в вашей организации?',
+      opts:['Интеграции нет — системы изолированы, данные передаются через выгрузку файлов или вручную','Есть точечные интеграции между отдельными системами, но единой архитектуры нет','Используется интеграционная шина (ESB / middleware) или API-слой','Часть систем интегрирована через API, часть — через файлы и ручной обмен','Есть централизованное хранилище данных (Data Warehouse / Data Lake)','Много унаследованных систем (legacy) — интеграция с ними сложна или невозможна','Интеграционная архитектура формально не описана, работает «как исторически сложилось»']},
+    en:{q:'How is integration between systems organised in your organisation?',
+      opts:['No integration — systems are isolated, data transferred via file exports or manually','Point-to-point integrations exist between some systems, but no unified architecture','An integration bus (ESB / middleware) or API layer is used','Some systems integrated via API, others still via files and manual exchange','A centralised data repository exists (Data Warehouse / Data Lake)','Many legacy systems — integration with them is difficult or impossible','Integration architecture is not formally documented, works "as historically established"']}
+  },
+  V1:{
+    block:{ru:'Блок В · Данные и аналитика',en:'Block C · Data & Analytics'},
+    dim:'Технологии / Technology',
+    ru:{q:'Как организована работа с данными — их сбор, хранение и использование для аналитики?',
+      opts:['Единого хранилища нет — данные разрознены по системам, файлам и базам подразделений','Есть Data Warehouse или корпоративное хранилище, но оно не охватывает все источники','Аналитика строится вручную: выгрузки из систем, сводные таблицы Excel','Используется BI-платформа (Power BI, Tableau, QlikView и др.), но охват ограничен','Качество данных низкое: дубли, расхождения между системами, ненадёжные справочники','Нет выстроенной практики управления данными — Data Governance отсутствует','Предиктивная и продвинутая аналитика не применяется']},
+    en:{q:'How is data work organised — its collection, storage and use for analytics?',
+      opts:['No single repository — data scattered across systems, files and departmental databases','A Data Warehouse exists but does not cover all data sources','Analytics built manually: system exports and Excel pivot tables','A BI platform is used (Power BI, Tableau, QlikView etc.) but coverage is limited','Data quality is low: duplicates, discrepancies between systems, unreliable master data','No established data governance practice — Data Governance is absent','Predictive and advanced analytics are not applied']}
+  },
+  V2:{
+    block:{ru:'Блок В · Данные и аналитика',en:'Block C · Data & Analytics'},
+    dim:'Технологии / Technology',
+    ru:{q:'Какие аналитические задачи бизнеса сейчас не закрыты или решаются с большими затратами времени и ресурсов?',
+      opts:['Нет сквозной аналитики по ключевым процессам — данные есть, но собрать в единую картину невозможно без ручной работы','Финансово-экономический анализ требует долгой подготовки данных, к моменту готовности теряет актуальность','Производственная и операционная аналитика недоступна в реальном времени — данные снимаются вручную или с задержкой','Нет возможности анализировать данные в разрезах: по объектам, регионам, продуктам, контрагентам','Руководство принимает решения на основе разрозненных отчётов, которые противоречат друг другу','Аналитика описывает прошлое, но не даёт прогнозов и не сигнализирует об отклонениях']},
+    en:{q:'Which analytics needs of the business are currently unmet or require excessive time and resources?',
+      opts:['No end-to-end analytics across key processes — data exists but cannot be consolidated without manual effort','Financial and economic analysis requires lengthy data preparation and loses relevance by the time it is ready','Production and operational analytics unavailable in real time — data collected manually or with delays','No ability to analyse data by dimensions: objects, regions, products, counterparties','Management decisions based on conflicting reports from different departments','Analytics describes the past but provides no forecasts or deviation alerts']}
+  },
+  G1:{
+    block:{ru:'Блок Г · Готовность к автоматизации и AI',en:'Block D · Automation & AI Readiness'},
+    dim:'Культура и компетенции / Culture',
+    ru:{q:'Какие повторяющиеся задачи выполняются по одному и тому же сценарию каждый раз?',
+      opts:['Ответы на типовые вопросы сотрудников или клиентов','Подготовка стандартных документов по шаблону: договоры, акты, письма, приказы','Проверка документов на соответствие требованиям или регламентам','Сбор и консолидация данных из нескольких источников для регулярного отчёта','Первичная обработка входящих обращений и их маршрутизация','Регулярные напоминания и контроль исполнения поручений']},
+    en:{q:'Which recurring tasks are performed the same way every time?',
+      opts:['Answering standard questions from employees or clients','Preparing standard documents from templates: contracts, acts, letters, orders','Checking documents for compliance with requirements or regulations','Collecting and consolidating data from multiple sources for a regular report','Initial processing of incoming requests and their routing','Regular reminders and monitoring of task execution']}
+  },
+  G2:{
+    block:{ru:'Блок Г · Готовность к автоматизации и AI',en:'Block D · Automation & AI Readiness'},
+    dim:'Культура и компетенции / Culture',
+    ru:{q:'Используют ли сотрудники AI-инструменты в рабочих задачах — официально или по собственной инициативе?',
+      opts:['Да, часть сотрудников самостоятельно использует ChatGPT для текстов и писем','Да, есть Microsoft Copilot или аналог — но без обучения и регламентов','Пробовали точечно, системного применения нет','Руководство ограничивает использование из-за соображений безопасности данных','Есть инициативные сотрудники-энтузиасты, но это не практика компании','AI-инструменты не используются совсем']},
+    en:{q:'Do employees use AI tools in their work — officially or on their own initiative?',
+      opts:['Yes, some employees independently use ChatGPT for texts and emails','Yes, Microsoft Copilot or similar exists — but without training or guidelines','Tried occasionally, no systematic use','Management restricts use due to data security concerns','There are enthusiastic individual adopters, but it is not a company-wide practice','AI tools are not used at all']}
+  },
+  D1:{
+    block:{ru:'Блок Д · Стратегические ограничения',en:'Block E · Strategic Constraints'},
+    dim:'Цифровая стратегия / Digital Strategy',
+    ru:{q:'Что сейчас сдерживает рост или операционную эффективность компании сильнее всего?',
+      opts:['Скорость принятия решений: длинные цепочки согласований','Масштабируемость: рост объёмов требует пропорционального роста численности персонала','Качество клиентского сервиса: клиенты ждут дольше, чем должны','Операционные затраты: высокая доля ручного труда в ключевых процессах','Управленческая видимость: руководство не имеет актуальной картины происходящего','Кадровые риски: критические знания завязаны на конкретных людях']},
+    en:{q:'What is currently holding back the company\'s growth or operational efficiency most?',
+      opts:['Decision-making speed: long approval chains and manual coordination','Scalability: volume growth requires proportional headcount growth','Customer service quality: clients wait longer than they should','Operational costs: high share of manual labour in key processes','Management visibility: leadership lacks a current picture of operations','People risk: critical knowledge concentrated in specific individuals']}
+  },
+  E1:{
+    block:{ru:'Блок Е · Приоритет первого шага',en:'Block F · First Step Priority'},
+    dim:'Все измерения / All dimensions',
+    ru:{q:'Если запустить один ИТ-проект в ближайшие 3–6 месяцев — что даст наибольший эффект для бизнеса и команды?',
+      opts:['Единая система учёта заявок и инцидентов (Service Desk) — сейчас задачи теряются','Автоматизировать согласование типовых документов — убрать почту и Excel из этого процесса','Управленческий дашборд с ключевыми показателями в реальном времени','Интегрировать две ключевые системы, между которыми сейчас всё передаётся вручную','AI-ассистент для ответов на типовые внутренние запросы или работы с документами','Обучить команду и внедрить инструменты, которые уже есть, но не используются']},
+    en:{q:'If you could launch one IT project in the next 3–6 months — what would give the greatest impact for the business and team?',
+      opts:['A unified request and incident tracking system (Service Desk) — tasks are currently getting lost','Automate approval of standard documents — remove email and Excel from this process','A management dashboard with key indicators in real time','Integrate two key systems currently exchanging data manually','An AI assistant for answering standard internal requests or working with documents','Train the team and adopt tools that already exist but are not being used']}
+  }
+};
+
+// ── Adaptive question selection ────────────────────────────
+function itsSelectQuestions(dimScores){
+  // dimScores: [Strategy(0), Org(1), Culture(2), Customers(3), Processes(4), Tech(5)]
+  const qs = [];
+  if(dimScores[4] < 3.0){ qs.push('A1'); if(dimScores[4]<2.5) qs.push('A2'); }
+  if(dimScores[5] < 3.0){ qs.push('B1'); qs.push('B2'); }
+  if(dimScores[5] < 2.5){ qs.push('V1'); qs.push('V2'); }
+  else if(dimScores[5] < 3.0){ qs.push('V1'); }
+  if(dimScores[2] < 3.0){ qs.push('G1'); if(dimScores[2]<2.5) qs.push('G2'); }
+  if(dimScores[0] < 3.0){ qs.push('D1'); }
+  qs.push('E1'); // always last
+  // deduplicate, cap at 6
+  return [...new Set(qs)].slice(0,6);
+}
+
+// ── State ──────────────────────────────────────────────────
+let _itsQKeys = [];
+let _itsQIdx  = 0;
+let _itsAnswers = []; // [{qKey, question, selected:[], free:''}]
+let _itsStrategy = '';
+let _itsProtocol = '';
+
+// ── Entry point ────────────────────────────────────────────
+function startITStrategy(){
+  const d = window._exportData;
+  if(!d){ alert(lang==='ru'?'Сначала пройдите оценку.':'Please complete the assessment first.'); return; }
+  _itsQKeys   = itsSelectQuestions(d.dimScores||[3,3,3,3,3,3]);
+  _itsQIdx    = 0;
+  _itsAnswers = [];
+  _itsStrategy = '';
+  _itsProtocol = '';
+  goSc('its-sc');
+  itsRenderIntro();
+}
+
+// ── Helpers ────────────────────────────────────────────────
+function itsT(){ return ITS_T[lang]||ITS_T.ru; }
+function itsSetProgress(pct){ document.getElementById('its-pb').style.width=pct+'%'; }
+function itsSetHeader(title,sub,pct){
+  document.getElementById('its-hdr-title').textContent=title;
+  document.getElementById('its-hdr-pct').textContent=sub;
+  itsSetProgress(pct);
+}
+function itsBody(html){ document.getElementById('its-body').innerHTML=html; }
+function itsFoot(html){ document.getElementById('its-foot').innerHTML=html; }
+
+// ── Intro screen ───────────────────────────────────────────
+function itsRenderIntro(){
+  const t=itsT(), d=window._exportData;
+  const lvName = t.levels[d.level]||d.level;
+  itsSetHeader(t.hdrTitle, '1/'+(itsT()===ITS_T.ru?'Вступление':'Intro'), 5);
+  itsBody(`
+    <div style="font-size:17px;font-weight:800;color:#0f172a;margin-bottom:10px">${t.introTitle}</div>
+    <div style="font-size:13px;color:#475569;line-height:1.7;margin-bottom:16px">
+      ${t.introDesc}<br><br>
+      <strong>DMA: ${d.score.toFixed(2)}/5.0 · ${lvName}</strong>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:8px;letter-spacing:.05em">${t.introWhat}</div>
+      ${t.introSteps.map(s=>`<div style="font-size:12px;color:#1e3a8a;line-height:1.9">${s}</div>`).join('')}
+    </div>
+    <div style="background:#f8fafc;border-radius:10px;padding:12px 14px;border:1px solid #e2e8f0">
+      <div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:8px;letter-spacing:.05em">${t.weakLabel}:</div>
+      ${(d.dimScores||[]).map((s,i)=>s<3.0?`<div style="font-size:12px;color:#${s<2.5?'991b1b':'b45309'};margin-bottom:3px">⚠ ${t.dimNames[i]}: ${s.toFixed(2)}/5.0</div>`:'').join('')}
+    </div>
+  `);
+  itsFoot(`
+    <button class="bb" onclick="goSc('res-sc')">${t.btnBack}</button>
+    <button class="bn" onclick="itsStartInterview()">${t.btnBegin}</button>
+  `);
+}
+
+// ── Interview ──────────────────────────────────────────────
+function itsStartInterview(){ _itsQIdx=0; itsRenderQuestion(); }
+
+function itsRenderQuestion(){
+  const t=itsT();
+  const total=_itsQKeys.length;
+  const qKey=_itsQKeys[_itsQIdx];
+  const blk=ITS_BLOCKS[qKey];
+  const qData=blk[lang]||blk.ru;
+  const pct=10+(_itsQIdx/total)*45;
+  itsSetHeader(t.hdrTitle, `${t.qLabel} ${_itsQIdx+1} ${t.of} ${total}`, pct);
+
+  // Previous answer snippet
+  const prevHtml = _itsQIdx>0 && _itsAnswers.length>0 ? (()=>{
+    const prev=_itsAnswers[_itsAnswers.length-1];
+    const prevText=[...prev.selected, prev.free].filter(Boolean).join(' · ').substring(0,120);
+    return `<div style="background:#f0fdf4;border-left:3px solid #0f766e;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:.05em;margin-bottom:4px">${t.prevLabel}</div>
+      <div style="font-size:12px;color:#334155;font-style:italic">"${prevText}${prevText.length>=120?'...':''}"</div>
+    </div>`;
+  })() : '';
+
+  // Options checkboxes
+  const optsHtml = qData.opts.map((opt,i)=>`
+    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:8px;padding:8px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;transition:background .15s" id="its-opt-wrap-${i}">
+      <input type="checkbox" id="its-opt-${i}" value="${i}" style="margin-top:2px;accent-color:#1e3a8a;width:15px;height:15px;flex-shrink:0" onchange="itsHighlightOpt(${i})">
+      <span style="font-size:13px;color:#334155;line-height:1.5">${opt}</span>
+    </label>`).join('');
+
+  itsBody(`
+    ${prevHtml}
+    <div style="font-size:10px;font-weight:700;color:#1e40af;letter-spacing:.05em;margin-bottom:8px">${blk.block[lang]||blk.block.ru} · ${blk.dim}</div>
+    <div style="font-size:15px;font-weight:700;color:#0f172a;line-height:1.5;margin-bottom:16px">${qData.q}</div>
+    <div style="font-size:11px;font-weight:700;color:#0f766e;margin-bottom:10px">${t.selHint}</div>
+    <div id="its-opts">${optsHtml}</div>
+    <div style="margin-top:12px">
+      <div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:6px">${t.otherLabel}</div>
+      <textarea id="its-free" placeholder="${t.otherPlaceholder}" style="width:100%;min-height:70px;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:13px;color:#0f172a;resize:vertical;outline:none;font-family:Manrope,sans-serif;box-sizing:border-box"></textarea>
+    </div>
+  `);
+
+  const isLast = _itsQIdx >= total-1;
+  itsFoot(`
+    <button class="bb" onclick="itsSkip()">${t.btnSkip}</button>
+    <button class="bn" onclick="itsSubmitAnswer()">${isLast ? t.btnFinish : t.btnNext}</button>
+  `);
+}
+
+function itsHighlightOpt(i){
+  const cb=document.getElementById('its-opt-'+i);
+  const wrap=document.getElementById('its-opt-wrap-'+i);
+  if(wrap) wrap.style.background=cb.checked?'#eff6ff':'#fff';
+  if(wrap) wrap.style.borderColor=cb.checked?'#2563eb':'#e2e8f0';
+}
+
+function itsSubmitAnswer(){
+  const qKey=_itsQKeys[_itsQIdx];
+  const blk=ITS_BLOCKS[qKey];
+  const qData=blk[lang]||blk.ru;
+  const selected=[];
+  qData.opts.forEach((_,i)=>{
+    const cb=document.getElementById('its-opt-'+i);
+    if(cb&&cb.checked) selected.push(qData.opts[i]);
+  });
+  const free=(document.getElementById('its-free')||{}).value||'';
+  _itsAnswers.push({qKey, question:qData.q, block:(blk.block[lang]||blk.block.ru), selected, free: free.trim()});
+  _itsQIdx++;
+  if(_itsQIdx<_itsQKeys.length){ itsRenderQuestion(); }
+  else { itsRenderGenerating(); }
+}
+
+function itsSkip(){
+  const qKey=_itsQKeys[_itsQIdx];
+  const blk=ITS_BLOCKS[qKey];
+  const qData=blk[lang]||blk.ru;
+  _itsAnswers.push({qKey, question:qData.q, block:(blk.block[lang]||blk.block.ru), selected:[], free:''});
+  _itsQIdx++;
+  if(_itsQIdx<_itsQKeys.length){ itsRenderQuestion(); }
+  else { itsRenderGenerating(); }
+}
+
+// ── Generating ─────────────────────────────────────────────
+async function itsRenderGenerating(){
+  const t=itsT();
+  itsSetHeader(t.hdrTitle, '...', 60);
+  itsBody(`
+    <div style="text-align:center;padding:40px 20px">
+      <div style="font-size:34px;margin-bottom:14px">⚙️</div>
+      <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:8px">${t.generating}</div>
+      <div style="font-size:12px;color:#64748b;line-height:1.7">${t.generatingDesc}</div>
+      <div style="margin-top:20px;display:flex;justify-content:center;gap:7px">
+        <span style="width:9px;height:9px;background:#1e3a8a;border-radius:50%;display:inline-block;animation:bounce .8s infinite"></span>
+        <span style="width:9px;height:9px;background:#0f766e;border-radius:50%;display:inline-block;animation:bounce .8s .2s infinite"></span>
+        <span style="width:9px;height:9px;background:#1e3a8a;border-radius:50%;display:inline-block;animation:bounce .8s .4s infinite"></span>
+      </div>
+    </div>
+  `);
+  itsFoot('');
+  await itsGenerateStrategy();
+}
+
+// ── AI generation ──────────────────────────────────────────
+async function itsGenerateStrategy(){
+  const t=itsT(), d=window._exportData;
+  if(!d){ itsRenderResult(false); return; }
+
+  const LEVELS_NEXT_RU={Beginner:'Формирующийся',Emerging:'Развивающийся',Performing:'Продвинутый',Advancing:'Эксперт',Expert:null};
+  const LEVELS_NEXT_EN={Beginner:'Emerging',Emerging:'Performing',Performing:'Advancing',Advancing:'Expert',Expert:null};
+  const nextLv = lang==='ru'?(LEVELS_NEXT_RU[d.level]||'—'):(LEVELS_NEXT_EN[d.level]||'—');
+  const lvName = t.levels[d.level]||d.level;
+  const dimBlock = (d.dimScores||[]).map((s,i)=>`  ${t.dimNames[i]}: ${s.toFixed(2)}/5.0`).join('\n');
+  const interviewBlock = _itsAnswers.map((a,i)=>{
+    const ans=[...a.selected, a.free].filter(Boolean).join('; ') || '—';
+    return `  Q${i+1}: ${a.question}\n  A${i+1}: ${ans}`;
+  }).join('\n\n');
+
+  const isRu = lang==='ru';
+  const systemPrompt = isRu
+    ? `Ты — ИТ-консультант в роли CIO / IT Strategy Consultant / Enterprise Architect / Digital Transformation Advisor.
+Разработай практическую ИТ-стратегию. Правила:
+1. Только конкретные действия. Глаголы: внедрить, автоматизировать, интегрировать, масштабировать, модернизировать, централизовать, стандартизировать, оптимизировать, мигрировать, развернуть.
+2. Запрещено: «развивать», «улучшать», «обеспечить» без конкретики.
+3. Стратегия сбалансирована: Run (операции) + Grow (рост) + Transform (трансформация).
+4. Каждая инициатива: название, категория, срок, владелец, KPI, ожидаемый результат.`
+    : `You are an IT consultant acting as CIO / IT Strategy Consultant / Enterprise Architect / Digital Transformation Advisor.
+Develop a practical IT strategy. Rules:
+1. Concrete actions only. Verbs: implement, automate, integrate, scale, modernize, centralize, standardize, optimize, migrate, deploy.
+2. No vague terms: no "develop", "improve", "ensure" without specifics.
+3. Balanced strategy: Run (operations) + Grow (growth) + Transform (transformation).
+4. Each initiative: name, category, timeline, owner, KPI, expected result.`;
+
+  const userPrompt = isRu
+    ? `=== РЕЗУЛЬТАТЫ DMA ===
+Отрасль: ${d.industry||'н/д'} | Размер: ${d.size||'н/д'} | Роль: ${d.role||'н/д'}
+DMA: ${d.score.toFixed(2)}/5.0 | Уровень: ${lvName} | Целевой: ${nextLv}
+
+Баллы по измерениям:
+${dimBlock}
+
+Активные технологии: ${(d.t1active||[]).join(', ')||'н/д'}
+Эксперимент: ${(d.t1exp||[]).join(', ')||'н/д'}
+Барьеры: ${(d.barriers||[]).join(', ')||'н/д'}
+Драйверы: ${(d.drivers||[]).join(', ')||'н/д'}
+
+=== РЕЗУЛЬТАТЫ DISCOVERY INTERVIEW ===
+${interviewBlock||'Интервью не проводилось.'}
+
+=== СТРУКТУРА ОТВЕТА (строго) ===
+
+## EXECUTIVE SUMMARY
+(3–4 предложения)
+
+## АНАЛИЗ ТЕКУЩЕГО СОСТОЯНИЯ
+(Ключевые проблемы из DMA и интервью — конкретно, с данными)
+
+## ИТ-ВИДЕНИЕ
+(Куда движется организация через 3 года)
+
+## СТРАТЕГИЧЕСКИЕ НАПРАВЛЕНИЯ И ИНИЦИАТИВЫ
+(3–5 направлений. Под каждым — таблица инициатив:
+Инициатива | Run/Grow/Transform | Срок | Владелец | KPI | Ожидаемый результат
+Минимум 8 инициатив суммарно, обязательно Run + Grow + Transform)
+
+## ДОРОЖНАЯ КАРТА
+Quick Wins (0–6 мес): ...
+Short-Term (6–18 мес): ...
+Mid-Term (18–36 мес): ...
+Long-Term (3–5 лет): ...
+
+## ДОЛГОСРОЧНОЕ ЦИФРОВОЕ ВИДЕНИЕ
+(Компания через 5–10 лет, 2–3 предложения)`
+    : `=== DMA RESULTS ===
+Industry: ${d.industry||'n/a'} | Size: ${d.size||'n/a'} | Role: ${d.role||'n/a'}
+DMA: ${d.score.toFixed(2)}/5.0 | Level: ${lvName} | Target: ${nextLv}
+
+Dimension scores:
+${dimBlock}
+
+Active technologies: ${(d.t1active||[]).join(', ')||'n/a'}
+Experimenting: ${(d.t1exp||[]).join(', ')||'n/a'}
+Barriers: ${(d.barriers||[]).join(', ')||'n/a'}
+Drivers: ${(d.drivers||[]).join(', ')||'n/a'}
+
+=== DISCOVERY INTERVIEW RESULTS ===
+${interviewBlock||'Interview not conducted.'}
+
+=== RESPONSE STRUCTURE (strictly) ===
+
+## EXECUTIVE SUMMARY
+(3–4 sentences)
+
+## CURRENT STATE ANALYSIS
+(Key issues from DMA and interview — specific, data-driven)
+
+## IT VISION
+(Where the organisation is heading in 3 years)
+
+## STRATEGIC DIRECTIONS AND INITIATIVES
+(3–5 directions. Under each — initiative table:
+Initiative | Run/Grow/Transform | Timeline | Owner | KPI | Expected Result
+Minimum 8 initiatives total, must include Run + Grow + Transform)
+
+## ROADMAP
+Quick Wins (0–6 months): ...
+Short-Term (6–18 months): ...
+Mid-Term (18–36 months): ...
+Long-Term (3–5 years): ...
+
+## LONG-TERM DIGITAL VISION
+(Company in 5–10 years, 2–3 sentences)`;
+
+  try{
+    const resp=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4000,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
+    });
+    const raw=await resp.text();
+    let data;
+    try{data=JSON.parse(raw);}catch(e){
+      _itsStrategy='';
+      itsRenderResult(false);
+      return;
+    }
+    if(!resp.ok){
+      _itsStrategy='';
+      itsRenderResult(false);
+      return;
+    }
+    _itsStrategy=data.content?.map(c=>c.text||'').join('')||'';
+    itsSetProgress(90);
+    itsRenderResult(true);
+  }catch(e){
+    _itsStrategy='';
+    itsRenderResult(false);
+  }
+}
+
+// ── Result screen ──────────────────────────────────────────
+function itsRenderResult(success){
+  const t=itsT();
+  itsSetHeader(t.hdrTitle, '✓', 100);
+  const stratHtml = _itsStrategy
+    ? mdToHtml(_itsStrategy)
+    : `<div style="color:#64748b;font-size:13px">${t.apiError}</div>`;
+
+  itsBody(`
+    <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:11px 14px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:700;color:#065f46">${success?'✅':''} ${t.readyTitle}</div>
+      <div style="font-size:11px;color:#047857;margin-top:3px">${t.readyDesc}</div>
+    </div>
+    ${success?`<div style="font-size:13px;color:#334155;line-height:1.75;max-height:420px;overflow-y:auto;padding-right:6px;margin-bottom:4px">${stratHtml}</div>`:''}
+  `);
+
+  itsFoot(`
+    <button class="bb" style="font-size:12px" onclick="itsPdfDma()">📄 ${t.dlDma}</button>
+    <button class="bb" style="font-size:12px" onclick="itsPdfProtocol()">📋 ${t.dlProtocol}</button>
+    ${success?`<button class="bn" style="font-size:12px" onclick="itsPdfStrategy()">🗺 ${t.dlStrategy}</button>`:''}
+    <div style="width:100%;text-align:center;margin-top:6px">
+      <button class="bb" style="font-size:11px;color:#64748b" onclick="goSc('res-sc')">${t.backToResults}</button>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PDF EXPORTS (window.print, styled for print)
+// ═══════════════════════════════════════════════════════════
+
+function itsOpenPrintWindow(titleStr, bodyHtml){
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${titleStr}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Manrope',Arial,sans-serif;color:#0f172a;padding:32px 40px;max-width:820px;margin:0 auto;font-size:12px;line-height:1.65}
+    .hbar{height:5px;background:linear-gradient(90deg,#1e3a8a,#0f766e);margin-bottom:22px;border-radius:2px}
+    h1{font-size:22px;font-weight:800;color:#1e3a8a;margin-bottom:4px}
+    h2{font-size:15px;font-weight:700;color:#0f766e;margin:20px 0 8px;border-bottom:2px solid #dbeafe;padding-bottom:4px}
+    h3{font-size:13px;font-weight:700;color:#1e3a8a;margin:16px 0 6px;border-bottom:1.5px solid #dbeafe;padding-bottom:3px}
+    .meta{font-size:11px;color:#64748b;margin-bottom:16px}
+    .chip{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe;margin:0 4px 4px 0}
+    .chip.ok{background:#f0fdf4;color:#065f46;border-color:#a7f3d0}
+    .chip.warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
+    table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:11px}
+    th{background:#1e3a8a;color:#fff;padding:7px 10px;text-align:left;font-weight:700}
+    td{padding:6px 10px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+    tr:nth-child(even) td{background:#f8fafc}
+    .sec{font-size:10px;font-weight:700;letter-spacing:.08em;color:#64748b;margin:18px 0 8px;text-transform:uppercase;border-bottom:1px solid #e2e8f0;padding-bottom:4px}
+    .qa-block{margin-bottom:16px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden}
+    .qa-q{background:#1e3a8a;padding:8px 12px;font-size:12px;font-weight:700;color:#fff}
+    .qa-block-lbl{font-size:10px;color:#93c5fd;font-weight:400;margin-left:8px}
+    .qa-body{padding:10px 12px;background:#fff}
+    .qa-sel{font-size:11px;font-weight:700;color:#0f766e;margin-bottom:4px}
+    .qa-opt{font-size:12px;color:#334155;margin-bottom:3px}
+    .qa-free{font-size:12px;color:#334155;font-style:italic;margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9}
+    .qa-insight{background:#eff6ff;border-left:3px solid #2563eb;padding:8px 12px;margin-top:8px;font-size:11px;color:#1e3a8a}
+    .dir-card{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:14px;overflow:hidden}
+    .dir-hdr{background:#1e3a8a;padding:8px 12px;font-size:13px;font-weight:700;color:#fff}
+    .dir-body{padding:10px 12px}
+    .dir-label{font-size:10px;font-weight:700;color:#0f766e;text-decoration:underline;text-underline-offset:2px;margin-right:4px}
+    .run{background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .grow{background:#d1fae5;color:#065f46;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .transform{background:#ede9fe;color:#5b21b6;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .vision-box{background:#1e3a8a;color:#fff;border-radius:8px;padding:16px 18px;margin:14px 0}
+    .vision-box p{color:#bfdbfe;font-size:12px;line-height:1.7;margin-top:8px}
+    .roadmap-phase{background:#1e3a8a;color:#fff;padding:7px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;margin-top:14px}
+    .roadmap-items{border:1px solid #e2e8f0;border-top:none;border-radius:0 0 6px 6px;padding:10px 14px}
+    .roadmap-item{font-size:12px;color:#334155;padding:3px 0;border-bottom:1px dotted #e2e8f0}
+    .roadmap-item:last-child{border-bottom:none}
+    .ft{margin-top:28px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between}
+    @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:20px 28px}}
+  </style></head><body>${bodyHtml}</body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),700);
+}
+
+// ── PDF 1: DMA Report ──────────────────────────────────────
+function itsPdfDma(){
+  const d=window._exportData;
+  if(!d){alert('No data');return;}
+  const t=itsT(), isRu=lang==='ru';
+  const date=new Date().toLocaleDateString(isRu?'ru-RU':'en-GB');
+  const lvName=t.levels[d.level]||d.level;
+  const LEVELS_NEXT_RU={Beginner:'Формирующийся',Emerging:'Развивающийся',Performing:'Продвинутый',Advancing:'Эксперт',Expert:'—'};
+  const LEVELS_NEXT_EN={Beginner:'Emerging',Emerging:'Performing',Performing:'Advancing',Advancing:'Expert',Expert:'—'};
+  const nextLv=isRu?LEVELS_NEXT_RU[d.level]:LEVELS_NEXT_EN[d.level];
+  const DIM_NAMES=t.dimNames;
+  const dimsHtml=(d.dimScores||[]).map((s,i)=>{
+    const pct=Math.round((s-1)/4*100);
+    const color=s>=4?'#059669':s>=3?'#0891b2':s>=2?'#d97706':'#dc2626';
+    return `<tr><td>${DIM_NAMES[i]}</td><td style="font-weight:700;color:${color}">${s.toFixed(2)}</td><td>
+      <div style="height:8px;background:#e2e8f0;border-radius:4px"><div style="width:${pct}%;height:100%;background:${color};border-radius:4px"></div></div>
+    </td></tr>`;
+  }).join('');
+
+  // Strengths & gaps
+  const ctx=buildFullContext();
+  const strengthsHtml=(ctx.strong||[]).slice(0,4).map(s=>`<div style="font-size:11px;color:#065f46;margin-bottom:3px">✓ ${s}</div>`).join('');
+  const critHtml=(ctx.critical||[]).slice(0,4).map(s=>`<div style="font-size:11px;color:#dc2626;margin-bottom:3px">⚠ ${s}</div>`).join('');
+
+  const body=`
+    <div class="hbar"></div>
+    <h1>${isRu?'Оценка цифровой зрелости':'Digital Maturity Assessment'}</h1>
+    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}  ·  ${isRu?'Размер':'Size'}: ${d.size||'—'}  ·  ${isRu?'Роль':'Role'}: ${d.role||'—'}</div>
+    <div style="margin-bottom:16px">
+      <span class="chip" style="font-size:13px;padding:5px 16px">DMA: ${d.score.toFixed(2)} / 5.0</span>
+      <span class="chip ${d.score>=3.5?'ok':d.score>=2.5?'':'warn'}">${lvName}</span>
+      <span class="chip">${isRu?'Цель':'Target'}: ${nextLv}</span>
+      <span class="chip">TAM(DT): ${(d.tamDT||0).toFixed(2)}</span>
+    </div>
+    <h2>${isRu?'Баллы по измерениям':'Dimension Scores'}</h2>
+    <table><thead><tr><th>${isRu?'Измерение':'Dimension'}</th><th>${isRu?'Балл':'Score'}</th><th>${isRu?'Уровень':'Level'}</th></tr></thead><tbody>${dimsHtml}</tbody></table>
+    ${strengthsHtml?`<h2>${isRu?'Сильные стороны':'Strengths'}</h2>${strengthsHtml}`:''}
+    ${critHtml?`<h2>${isRu?'Критические пробелы':'Critical Gaps'}</h2>${critHtml}`:''}
+    <div class="sec">${isRu?'РЕКОМЕНДАЦИИ ДЛЯ ИТ-СТРАТЕГИИ':'IT STRATEGY RECOMMENDATIONS'}</div>
+    <div style="font-size:12px;color:#334155;line-height:1.7">${(document.getElementById('ait')||{}).innerHTML||''}</div>
+    <div class="ft"><span>Digital Maturity Assessment · Zhanl Mamykova · mamykova2021@gmail.com</span><span>${date}</span></div>`;
+  itsOpenPrintWindow(isRu?'Оценка цифровой зрелости':'Digital Maturity Assessment', body);
+}
+
+// ── PDF 2: Interview Protocol ──────────────────────────────
+function itsPdfProtocol(){
+  const d=window._exportData;
+  const t=itsT(), isRu=lang==='ru';
+  const date=new Date().toLocaleDateString(isRu?'ru-RU':'en-GB');
+  const lvName=t.levels[d.level]||d.level;
+
+  const qaHtml=_itsAnswers.map((a,i)=>{
+    const selHtml=a.selected.length?`<div class="qa-sel">${isRu?'Выбрано:':'Selected:'}</div>${a.selected.map(s=>`<div class="qa-opt">☑ ${s}</div>`).join('')}`:'';
+    const freeHtml=a.free?`<div class="qa-free">${isRu?'Свободный ответ:':'Free answer:'} ${a.free}</div>`:'';
+    const noAnswer=!a.selected.length&&!a.free?`<div style="color:#94a3b8;font-size:11px;font-style:italic">${isRu?'Ответ не предоставлен':'No answer provided'}</div>`:'';
+    return `<div class="qa-block">
+      <div class="qa-q">${i+1}. ${a.question}<span class="qa-block-lbl">${a.block}</span></div>
+      <div class="qa-body">${selHtml}${freeHtml}${noAnswer}</div>
+    </div>`;
+  }).join('');
+
+  const body=`
+    <div class="hbar"></div>
+    <h1>${isRu?'Протокол Discovery Interview':'Discovery Interview Protocol'}</h1>
+    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  DMA: ${d.score.toFixed(2)}/5.0  ·  ${lvName}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}</div>
+    <div style="margin-bottom:14px">
+      <span class="chip">DMA: ${d.score.toFixed(2)}</span>
+      <span class="chip">${lvName}</span>
+      <span class="chip">${_itsAnswers.filter(a=>a.selected.length||a.free).length} ${isRu?'ответов':'answers'}</span>
+    </div>
+    <div class="sec">${isRu?'ВОПРОСЫ И ОТВЕТЫ':'QUESTIONS & ANSWERS'}</div>
+    ${qaHtml||`<div style="color:#94a3b8;font-size:12px">${isRu?'Интервью не проводилось.':'Interview not conducted.'}</div>`}
+    <div class="ft"><span>Digital Maturity Assessment · Zhanl Mamykova · mamykova2021@gmail.com</span><span>${date}</span></div>`;
+  itsOpenPrintWindow(isRu?'Протокол беседы':'Interview Protocol', body);
+}
+
+// ── PDF 3: IT Strategy ─────────────────────────────────────
+function itsPdfStrategy(){
+  const d=window._exportData;
+  const t=itsT(), isRu=lang==='ru';
+  const date=new Date().toLocaleDateString(isRu?'ru-RU':'en-GB');
+  const lvName=t.levels[d.level]||d.level;
+
+  if(!_itsStrategy){ alert(isRu?'Стратегия ещё не сформирована.':'Strategy not yet generated.'); return; }
+
+  const stratHtml = mdToHtml(_itsStrategy);
+
+  const body=`
+    <div class="hbar"></div>
+    <h1>${isRu?'ИТ-стратегия':'IT Strategy'}</h1>
+    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}  ·  ${isRu?'Размер':'Size'}: ${d.size||'—'}</div>
+    <div style="margin-bottom:16px">
+      <span class="chip">DMA: ${d.score.toFixed(2)}</span>
+      <span class="chip">${lvName}</span>
+      <span class="chip">${isRu?'Горизонт: 3–5 лет':'Horizon: 3–5 years'}</span>
+    </div>
+    <div style="font-size:13px;color:#334155;line-height:1.75">${stratHtml}</div>
+    <div class="ft"><span>Digital Maturity Assessment · Zhanl Mamykova · mamykova2021@gmail.com</span><span>${date}</span></div>`;
+  itsOpenPrintWindow(isRu?'ИТ-стратегия':'IT Strategy', body);
+}
+
+// ── Update CTA button labels on lang change ────────────────
+function itsUpdateLang(){
+  const t=ITS_T[lang]||ITS_T.ru;
+  const lbl=document.getElementById('its-cta-label');
+  const desc=document.getElementById('its-cta-desc');
+  const btn=document.getElementById('its-cta-btn');
+  if(lbl) lbl.textContent=t.btnLabel;
+  if(desc) desc.textContent=t.btnDesc;
+  if(btn) btn.textContent=t.btnStart;
 }
 
 </script>
