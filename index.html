@@ -1686,16 +1686,42 @@ Question: ${q}`;
     }),
   });
 
-  const d = await r.json();
+  const raw = await r.text();
+
+  console.log('Worker status:', r.status);
+  console.log('Worker raw response:', raw);
+
+  let d;
+
+  try {
+    d = JSON.parse(raw);
+  } catch (e) {
+    showResponse(isRu ? 'Worker вернул не JSON-ответ.' : 'Worker returned non-JSON response.');
+    return;
+  }
+
+  if (!r.ok) {
+    console.error('Worker/Anthropic error:', d);
+
+    showResponse(
+      isRu
+        ? `Ошибка AI-сервиса: ${d?.error?.message || d?.message || 'неизвестная ошибка'}`
+        : `AI service error: ${d?.error?.message || d?.message || 'unknown error'}`,
+    );
+
+    return;
+  }
 
   const txt = d.content?.map(c => c.text || '').join('') || '';
 
   showResponse(txt || (isRu ? 'Не удалось получить ответ.' : 'Could not get response.'));
 } catch (e) {
+  console.error('Fetch error:', e);
+
   showResponse(
     isRu
-      ? 'Для свободного диалога откройте агент в Claude.ai. Кнопки-вопросы выше работают без API.'
-      : 'For free dialogue open the agent in Claude.ai. Question buttons above work without API.',
+      ? 'Не удалось подключиться к AI-сервису. Проверьте Worker и CORS.'
+      : 'Could not connect to the AI service. Check Worker and CORS.',
   );
 }
 }
