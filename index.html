@@ -381,6 +381,12 @@ td.scc.sel .rbd{display:block}
     <div class="swc" id="sws"></div>
     <div class="swc" id="sww" style="margin-bottom:11px"></div>
     <div id="ait" style="margin-top:8px"></div>
+    <!-- ITS CTA — main next step -->
+    <div style="margin-top:14px;background:linear-gradient(135deg,#1e3a8a 0%,#0f766e 100%);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em;margin-bottom:5px" id="its-cta-label">🗺 РАЗРАБОТАТЬ ИТ-СТРАТЕГИЮ</div>
+      <div style="font-size:11px;color:#bfdbfe;margin-bottom:11px;line-height:1.5" id="its-cta-desc">На основе результатов DMA — полноценная ИТ-стратегия через диалог с AI-консультантом</div>
+      <button onclick="startITStrategy()" style="background:#fff;color:#1e3a8a;border:none;border-radius:8px;padding:8px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif" id="its-cta-btn">Начать →</button>
+    </div>
     <div class="export-wrap" style="margin-top:12px">
       <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--mu);margin-bottom:7px" id="save-section-lbl"></div>
       <button class="export-btn" onclick="exportPDF()" id="btn-export-pdf" style="margin-bottom:7px">
@@ -391,37 +397,11 @@ td.scc.sel .rbd{display:block}
       </button>
       <div id="sheets-status" style="font-size:11px;text-align:center;margin-top:6px;min-height:16px;color:var(--mu)"></div>
     </div>
-    <div class="chat-wrap" id="chat-block" style="display:none!important">
-      <div class="chat-header">
-        <div class="chat-ai-dot"></div>
-        <div class="chat-title" id="chat-title-lbl"></div>
-      </div>
-      <div class="chat-context" id="chat-ctx"></div>
-      <div class="ai-greeting" id="chat-greeting"></div>
-      <div class="chips-lbl" id="chips-lbl"></div>
-      <div class="chips-grid" id="chips-grid"></div>
-      <div class="chat-response" id="chat-resp"></div>
-      <div class="chat-input-row">
-        <input class="chat-input" id="chat-input" onkeydown="if(event.key==='Enter')sendChat()">
-        <button class="chat-send" id="chat-send-btn" onclick="sendChat()"></button>
-      </div>
-      <div class="chat-note" id="chat-note"></div>
-      <div class="chat-history" id="chat-history">
-        <div class="chat-hist-title">
-          <span id="chat-hist-lbl"></span>
-          <button class="save-chat-btn" id="save-chat-btn" onclick="saveChatPDF()"></button>
-        </div>
-        <div id="chat-hist-items"></div>
-      </div>
-    </div>
+    <!-- hidden stubs needed by JS -->
+    <div id="chat-block" style="display:none"><div id="chat-title-lbl"></div><div id="chat-ctx"></div><div id="chat-greeting"></div><div id="chips-lbl"></div><div id="chips-grid"></div><div id="chat-resp"></div><input id="chat-input"><div id="chat-note"></div><div id="chat-history"><span id="chat-hist-lbl"></span><div id="chat-hist-items"></div></div></div>
     <div style="background:#f0fdf4;border:0.5px solid #a7f3d0;border-radius:10px;padding:14px 16px;margin-top:10px;text-align:center">
       <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:5px" id="ty-title"></div>
       <div style="font-size:11px;color:#047857;line-height:1.6" id="ty-text"></div>
-    </div>
-    <div style="margin-top:14px;background:linear-gradient(135deg,#1e3a8a 0%,#0f766e 100%);border-radius:12px;padding:16px 18px;text-align:center">
-      <div style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em;margin-bottom:5px" id="its-cta-label">🗺 РАЗРАБОТАТЬ ИТ-СТРАТЕГИЮ</div>
-      <div style="font-size:11px;color:#bfdbfe;margin-bottom:11px;line-height:1.5" id="its-cta-desc">На основе результатов DMA — полноценная ИТ-стратегия через диалог с AI-консультантом</div>
-      <button onclick="startITStrategy()" style="background:#fff;color:#1e3a8a;border:none;border-radius:8px;padding:8px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif" id="its-cta-btn">Начать →</button>
     </div>
     <div class="rf" style="margin-top:10px">
       Digital Maturity Assessment · Developed by <strong>Zhanl Mamykova</strong> · <a href="mailto:mamykova2021@gmail.com" style="color:var(--ac);text-decoration:none">mamykova2021@gmail.com</a> · <a onclick="goSc('about-sc')" style="color:var(--ac);cursor:pointer;text-decoration:none">About the project</a>
@@ -2189,17 +2169,17 @@ async function itsGenerateStrategy(){
   const isRu = lang==='ru';
   const systemPrompt = isRu
     ? `Ты — ИТ-консультант в роли CIO / IT Strategy Consultant / Enterprise Architect / Digital Transformation Advisor.
-Разработай практическую ИТ-стратегию. Правила:
+Разработай краткую практическую ИТ-стратегию. Правила:
 1. Только конкретные действия. Глаголы: внедрить, автоматизировать, интегрировать, масштабировать, модернизировать, централизовать, стандартизировать, оптимизировать, мигрировать, развернуть.
 2. Запрещено: «развивать», «улучшать», «обеспечить» без конкретики.
-3. Стратегия сбалансирована: Run (операции) + Grow (рост) + Transform (трансформация).
-4. Каждая инициатива: название, категория, срок, владелец, KPI, ожидаемый результат.`
+3. Строго следуй структуре и лимитам. Не превышай 1800 слов.
+4. Таблицы — компактные, текст в ячейках не более 10 слов.`
     : `You are an IT consultant acting as CIO / IT Strategy Consultant / Enterprise Architect / Digital Transformation Advisor.
-Develop a practical IT strategy. Rules:
+Develop a concise practical IT strategy. Rules:
 1. Concrete actions only. Verbs: implement, automate, integrate, scale, modernize, centralize, standardize, optimize, migrate, deploy.
 2. No vague terms: no "develop", "improve", "ensure" without specifics.
-3. Balanced strategy: Run (operations) + Grow (growth) + Transform (transformation).
-4. Each initiative: name, category, timeline, owner, KPI, expected result.`;
+3. Strictly follow the structure and limits. Do not exceed 1800 words.
+4. Tables must be compact — max 10 words per cell.`;
 
   const userPrompt = isRu
     ? `=== РЕЗУЛЬТАТЫ DMA ===
@@ -2217,30 +2197,28 @@ ${dimBlock}
 === РЕЗУЛЬТАТЫ DISCOVERY INTERVIEW ===
 ${interviewBlock||'Интервью не проводилось.'}
 
-=== СТРУКТУРА ОТВЕТА (строго) ===
+=== СТРУКТУРА ОТВЕТА (строго, кратко — не более 1800 слов) ===
 
 ## EXECUTIVE SUMMARY
-(3–4 предложения)
-
-## АНАЛИЗ ТЕКУЩЕГО СОСТОЯНИЯ
-(Ключевые проблемы из DMA и интервью — конкретно, с данными)
+2 предложения: текущий уровень и главная задача.
 
 ## ИТ-ВИДЕНИЕ
-(Куда движется организация через 3 года)
+1–2 предложения: куда движется организация через 3 года.
 
 ## СТРАТЕГИЧЕСКИЕ НАПРАВЛЕНИЯ И ИНИЦИАТИВЫ
-(3–5 направлений. Под каждым — таблица инициатив:
-Инициатива | Run/Grow/Transform | Срок | Владелец | KPI | Ожидаемый результат
-Минимум 8 инициатив суммарно, обязательно Run + Grow + Transform)
+Ровно 3 направления. Для каждого:
+**НАПРАВЛЕНИЕ N: НАЗВАНИЕ** (одна строка — цель направления)
+Таблица: Инициатива | Тип | Срок | Владелец | KPI | Ожидаемый результат
+Ровно 2–3 инициативы на направление. Типы: Run, Grow, Transform — обязательно все три присутствуют.
+Текст в ячейках — максимум 10 слов.
 
 ## ДОРОЖНАЯ КАРТА
-Quick Wins (0–6 мес): ...
-Short-Term (6–18 мес): ...
-Mid-Term (18–36 мес): ...
-Long-Term (3–5 лет): ...
+Quick Wins (0–6 мес): не более 3 пунктов одной строкой каждый
+Short-Term (6–18 мес): не более 3 пунктов
+Mid-Term / Long-Term: по 2 пункта
 
 ## ДОЛГОСРОЧНОЕ ЦИФРОВОЕ ВИДЕНИЕ
-(Компания через 5–10 лет, 2–3 предложения)`
+1–2 предложения.`
     : `=== DMA RESULTS ===
 Industry: ${d.industry||'n/a'} | Size: ${d.size||'n/a'} | Role: ${d.role||'n/a'}
 DMA: ${d.score.toFixed(2)}/5.0 | Level: ${lvName} | Target: ${nextLv}
@@ -2256,35 +2234,33 @@ Drivers: ${(d.drivers||[]).join(', ')||'n/a'}
 === DISCOVERY INTERVIEW RESULTS ===
 ${interviewBlock||'Interview not conducted.'}
 
-=== RESPONSE STRUCTURE (strictly) ===
+=== RESPONSE STRUCTURE (strictly, max 1800 words) ===
 
 ## EXECUTIVE SUMMARY
-(3–4 sentences)
-
-## CURRENT STATE ANALYSIS
-(Key issues from DMA and interview — specific, data-driven)
+2 sentences: current level and main challenge.
 
 ## IT VISION
-(Where the organisation is heading in 3 years)
+1–2 sentences: where the organisation is heading in 3 years.
 
 ## STRATEGIC DIRECTIONS AND INITIATIVES
-(3–5 directions. Under each — initiative table:
-Initiative | Run/Grow/Transform | Timeline | Owner | KPI | Expected Result
-Minimum 8 initiatives total, must include Run + Grow + Transform)
+Exactly 3 directions. For each:
+**DIRECTION N: NAME** (one line — goal of the direction)
+Table: Initiative | Type | Timeline | Owner | KPI | Expected Result
+Exactly 2–3 initiatives per direction. Types: Run, Grow, Transform — all three must be present.
+Cell text — max 10 words each.
 
 ## ROADMAP
-Quick Wins (0–6 months): ...
-Short-Term (6–18 months): ...
-Mid-Term (18–36 months): ...
-Long-Term (3–5 years): ...
+Quick Wins (0–6 months): max 3 items, one line each
+Short-Term (6–18 months): max 3 items
+Mid-Term / Long-Term: 2 items each
 
 ## LONG-TERM DIGITAL VISION
-(Company in 5–10 years, 2–3 sentences)`;
+1–2 sentences.`;
 
   try{
     const resp=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
     });
     const raw=await resp.text();
     let data;
@@ -2382,7 +2358,7 @@ function itsOpenPrintWindow(titleStr, bodyHtml){
     @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:20px 28px}}
   </style></head><body>${bodyHtml}</body></html>`);
   w.document.close();
-  setTimeout(()=>w.print(),700);
+  setTimeout(()=>w.print(),1500);
 }
 
 // ── PDF 1: DMA Report ──────────────────────────────────────
