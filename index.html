@@ -391,7 +391,7 @@ td.scc.sel .rbd{display:block}
       </button>
       <div id="sheets-status" style="font-size:11px;text-align:center;margin-top:6px;min-height:16px;color:var(--mu)"></div>
     </div>
-    <div class="chat-wrap" id="chat-block" style="display:none">
+    <div class="chat-wrap" id="chat-block" style="display:none!important">
       <div class="chat-header">
         <div class="chat-ai-dot"></div>
         <div class="chat-title" id="chat-title-lbl"></div>
@@ -1436,6 +1436,8 @@ function mdToHtml(text){
       tableRows.push(line);
     } else {
       if(inTable) flushTable();
+      // Skip standalone -- separators
+      if(line.trim()==='--'||line.trim()==='---') continue;
       // Headers
       if(line.match(/^### /)) out.push(`<h4 style="font-size:12px;font-weight:700;color:#334155;margin:12px 0 4px">${inlineFormat(line.slice(4))}</h4>`);
       else if(line.match(/^## /)) out.push(`<h3 style="font-size:14px;font-weight:800;color:#1e3a8a;margin:16px 0 6px;padding-bottom:4px;border-bottom:2px solid #dbeafe">${inlineFormat(line.slice(3))}</h3>`);
@@ -1752,7 +1754,7 @@ Question: ${q}`;
   try{
     const r=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
     });
     const raw=await r.text();
     let d;
@@ -1931,15 +1933,15 @@ const ITS_BLOCKS = {
       opts:['Data registration and recording — tables, logs, manual registers','Collection and consolidation of production, operational or process data','Preparation of regular reports — operational, management, regulatory','Document approvals: contracts, purchase requests, work orders, acts','Tracking execution of instructions, deadlines, regulatory procedures','Processing internal or external requests and inquiries','Calculations done manually in Excel','Data transfer between departments via files or email']}
   },
   B1:{
-    block:{ru:'Блок Б · Системный ландшафт',en:'Block B · System Landscape'},
+    block:{ru:'Блок Б · ИТ-ландшафт',en:'Block B · IT Landscape'},
     dim:'Технологии / Technology',
     ru:{q:'Какие корпоративные системы сотрудники намеренно обходят — и выполняют ту же работу в Excel или вручную?',
-      opts:['CRM: учёт клиентов и сделок ведут в таблицах, а не в системе','ERP / учётная система: слишком сложна, дублируют в Excel','Система электронного документооборота: проще отправить письмо','Система управления задачами и проектами: не прижилась, переписываются в мессенджерах','Система кадрового учёта: оформление кадровых операций идёт по почте или на бумаге','Профильные отраслевые системы: нет нужного функционала, работают в обход','Нет корпоративных систем по этому направлению — работаем в Excel и почте']},
+      opts:['CRM: учёт клиентов и сделок ведут в таблицах, а не в системе','ERP / учётная система: слишком сложна, дублируют в Excel','Система электронного документооборота: проще отправить письмо','Система управления задачами и проектами: не прижилась, переписываются в мессенджерах','Система кадрового учёта: оформление кадровых операций идёт по почте или на бумаге','Профильные отраслевые системы: нет нужного функционала, работают в обход','Специализированных систем нет — всё ведётся в Excel и электронной почте']},
     en:{q:'Which corporate systems do employees intentionally bypass — and do the same work in Excel or manually?',
-      opts:['CRM: client and deal records kept in spreadsheets, not in the system','ERP / accounting system: too complex, duplicated in Excel','Electronic document management: easier to send an email','Task and project management system: not adopted, communication stays in messengers','HR system: HR operations processed via email or paper','Industry-specific systems: missing needed functionality, worked around','No corporate systems in this area — everything done in Excel and email']}
+      opts:['CRM: client and deal records kept in spreadsheets, not in the system','ERP / accounting system: too complex, duplicated in Excel','Electronic document management: easier to send an email','Task and project management system: not adopted, communication stays in messengers','HR system: HR operations processed via email or paper','Industry-specific systems: missing needed functionality, worked around','No specialised systems in place — all processes managed in Excel and email']}
   },
   B2:{
-    block:{ru:'Блок Б · Системный ландшафт',en:'Block B · System Landscape'},
+    block:{ru:'Блок Б · ИТ-ландшафт',en:'Block B · IT Landscape'},
     dim:'Технологии / Technology',
     ru:{q:'Как устроена интеграция между системами в вашей организации?',
       opts:['Интеграции нет — системы изолированы, данные передаются через выгрузку файлов или вручную','Есть точечные интеграции между отдельными системами, но единой архитектуры нет','Используется интеграционная шина (ESB / middleware) или API-слой','Часть систем интегрирована через API, часть — через файлы и ручной обмен','Есть централизованное хранилище данных (Data Warehouse / Data Lake)','Много унаследованных систем (legacy) — интеграция с ними сложна или невозможна','Интеграционная архитектура формально не описана, работает «как исторически сложилось»']},
@@ -1990,9 +1992,9 @@ const ITS_BLOCKS = {
     block:{ru:'Блок Е · Приоритет первого шага',en:'Block F · First Step Priority'},
     dim:'Все измерения / All dimensions',
     ru:{q:'Если запустить один ИТ-проект в ближайшие 3–6 месяцев — что даст наибольший эффект для бизнеса и команды?',
-      opts:['Единая система учёта заявок и инцидентов (Service Desk) — сейчас задачи теряются','Автоматизировать согласование типовых документов — убрать почту и Excel из этого процесса','Управленческий дашборд с ключевыми показателями в реальном времени','Интегрировать две ключевые системы, между которыми сейчас всё передаётся вручную','AI-ассистент для ответов на типовые внутренние запросы или работы с документами','Обучить команду и внедрить инструменты, которые уже есть, но не используются']},
+      opts:['Сотрудники перестанут терять заявки и инциденты — задачи будут под контролем (Service Desk)','Согласование документов займёт часы, а не недели — уберём почту и Excel из этого процесса','Руководство увидит ключевые показатели в реальном времени, без ожидания отчётов','Исчезнет ручная передача данных между двумя ключевыми системами — экономия времени каждый день','Сотрудники получат AI-ассистента для типовых запросов и работы с документами','Команда начнёт использовать инструменты, которые уже оплачены, но простаивают']},
     en:{q:'If you could launch one IT project in the next 3–6 months — what would give the greatest impact for the business and team?',
-      opts:['A unified request and incident tracking system (Service Desk) — tasks are currently getting lost','Automate approval of standard documents — remove email and Excel from this process','A management dashboard with key indicators in real time','Integrate two key systems currently exchanging data manually','An AI assistant for answering standard internal requests or working with documents','Train the team and adopt tools that already exist but are not being used']}
+      opts:['Employees stop losing track of requests and incidents — full visibility with a Service Desk','Document approvals take hours instead of weeks — email and Excel removed from the process','Management sees key indicators in real time, no more waiting for reports','Manual data transfer between two key systems eliminated — time saved every day','Employees get an AI assistant for routine requests and document work','The team starts using tools already paid for but sitting idle']}
   }
 };
 
@@ -2282,7 +2284,7 @@ Long-Term (3–5 years): ...
   try{
     const resp=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4000,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
     });
     const raw=await resp.text();
     let data;
@@ -2468,7 +2470,8 @@ function itsPdfStrategy(){
 
   if(!_itsStrategy){ alert(isRu?'Стратегия ещё не сформирована.':'Strategy not yet generated.'); return; }
 
-  const stratHtml = mdToHtml(_itsStrategy);
+  const cleanStrategy = _itsStrategy.replace(/^--+\s*$/gm,'').replace(/\n{3,}/g,'\n\n');
+  const stratHtml = mdToHtml(cleanStrategy);
 
   const body=`
     <div class="hbar"></div>
