@@ -1667,19 +1667,37 @@ Emerging active: ${t2active.join(', ')||'none'}. Emerging experimenting: ${t2exp
 Barriers: ${barriers.join(', ')||'none'}. Drivers: ${drivers.join(', ')||'none'}.
 Question: ${q}`;
 
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
-    });
-    const d=await r.json();
-    const txt=d.content?.map(c=>c.text||'').join('')||'';
-    showResponse(txt||(isRu?'Не удалось получить ответ.':'Could not get response.'));
-  }catch(e){
-    showResponse(isRu
-      ?'Для свободного диалога откройте агент в Claude.ai. Кнопки-вопросы выше работают без API.'
-      :'For free dialogue open the agent in Claude.ai. Question buttons above work without API.');
-  }
+  try {
+  const r = await fetch('https://dark-base-9669.aizhir-mt.workers.dev/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 700,
+      system: systemPrompt,
+      messages: [
+        {
+          role: 'user',
+          content: contextStr,
+        },
+      ],
+    }),
+  });
+
+  const d = await r.json();
+
+  const txt = d.content?.map(c => c.text || '').join('') || '';
+
+  showResponse(txt || (isRu ? 'Не удалось получить ответ.' : 'Could not get response.'));
+} catch (e) {
+  showResponse(
+    isRu
+      ? 'Для свободного диалога откройте агент в Claude.ai. Кнопки-вопросы выше работают без API.'
+      : 'For free dialogue open the agent in Claude.ai. Question buttons above work without API.',
+  );
+}
 }
 
 
