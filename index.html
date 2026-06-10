@@ -381,12 +381,6 @@ td.scc.sel .rbd{display:block}
     <div class="swc" id="sws"></div>
     <div class="swc" id="sww" style="margin-bottom:11px"></div>
     <div id="ait" style="margin-top:8px"></div>
-    <!-- ITS CTA — main next step -->
-    <div style="margin-top:14px;background:linear-gradient(135deg,#1e3a8a 0%,#0f766e 100%);border-radius:12px;padding:16px 18px;text-align:center">
-      <div style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em;margin-bottom:5px" id="its-cta-label">🗺 РАЗРАБОТАТЬ ИТ-СТРАТЕГИЮ</div>
-      <div style="font-size:11px;color:#bfdbfe;margin-bottom:11px;line-height:1.5" id="its-cta-desc">На основе результатов DMA — полноценная ИТ-стратегия через диалог с AI-консультантом</div>
-      <button onclick="startITStrategy()" style="background:#fff;color:#1e3a8a;border:none;border-radius:8px;padding:8px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif" id="its-cta-btn">Начать →</button>
-    </div>
     <div class="export-wrap" style="margin-top:12px">
       <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--mu);margin-bottom:7px" id="save-section-lbl"></div>
       <button class="export-btn" onclick="exportPDF()" id="btn-export-pdf" style="margin-bottom:7px">
@@ -397,8 +391,31 @@ td.scc.sel .rbd{display:block}
       </button>
       <div id="sheets-status" style="font-size:11px;text-align:center;margin-top:6px;min-height:16px;color:var(--mu)"></div>
     </div>
-    <!-- hidden stubs needed by JS -->
-    <div id="chat-block" style="display:none"><div id="chat-title-lbl"></div><div id="chat-ctx"></div><div id="chat-greeting"></div><div id="chips-lbl"></div><div id="chips-grid"></div><div id="chat-resp"></div><input id="chat-input"><div id="chat-note"></div><div id="chat-history"><span id="chat-hist-lbl"></span><div id="chat-hist-items"></div></div></div>
+    <div class="chat-wrap" id="chat-block" style="display:none">
+      <div class="chat-header">
+        <div class="chat-ai-dot"></div>
+        <div class="chat-title" id="chat-title-lbl"></div>
+      </div>
+      <div class="chat-context" id="chat-ctx"></div>
+      <div class="ai-greeting" id="chat-greeting"></div>
+      <div class="chips-lbl" id="chips-lbl"></div>
+      <div class="chips-grid" id="chips-grid"></div>
+      <div class="chat-response" id="chat-resp"></div>
+      <div class="chat-note" id="chat-note"></div>
+      <div class="chat-history" id="chat-history">
+        <div class="chat-hist-title">
+          <span id="chat-hist-lbl"></span>
+          <button class="save-chat-btn" id="save-chat-btn" onclick="saveChatPDF()"></button>
+        </div>
+        <div id="chat-hist-items"></div>
+      </div>
+    </div>
+    <!-- ITS CTA -->
+    <div style="margin-top:14px;background:linear-gradient(135deg,#1e3a8a 0%,#0f766e 100%);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em;margin-bottom:5px" id="its-cta-label">🗺 РАЗРАБОТАТЬ ИТ-СТРАТЕГИЮ</div>
+      <div style="font-size:11px;color:#bfdbfe;margin-bottom:11px;line-height:1.5" id="its-cta-desc">На основе результатов DMA — полноценная ИТ-стратегия через диалог с AI-консультантом</div>
+      <button onclick="startITStrategy()" style="background:#fff;color:#1e3a8a;border:none;border-radius:8px;padding:8px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif" id="its-cta-btn">Начать →</button>
+    </div>
     <div style="background:#f0fdf4;border:0.5px solid #a7f3d0;border-radius:10px;padding:14px 16px;margin-top:10px;text-align:center">
       <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:5px" id="ty-title"></div>
       <div style="font-size:11px;color:#047857;line-height:1.6" id="ty-text"></div>
@@ -1394,14 +1411,27 @@ function mdToHtml(text){
 
   function flushTable(){
     if(!tableRows.length) return;
-    // First row = header, second row = separator (---)
     const rows = tableRows.filter(r => !r.match(/^\|[-| :]+\|$/));
+    // Detect roadmap table (first col contains period names)
+    const isRoadmap = rows.length>1 && (rows[0].includes('Период') || rows[0].includes('Period') || rows[1].toLowerCase().includes('мес') || rows[1].toLowerCase().includes('month') || rows[1].toLowerCase().includes('quick'));
     let html = '<div style="overflow-x:auto;margin:10px 0"><table style="width:100%;border-collapse:collapse;font-size:11px">';
     rows.forEach((row, ri) => {
       const cells = row.split('|').slice(1,-1).map(c=>c.trim());
       const tag = ri===0 ? 'th' : 'td';
       const bg = ri===0 ? 'background:#1e3a8a;color:#fff' : (ri%2===0?'background:#f8fafc':'background:#fff');
-      html += '<tr>' + cells.map(c=>`<${tag} style="padding:6px 9px;border:1px solid #e2e8f0;${bg};text-align:left">${inlineFormat(c)}</${tag}>`).join('') + '</tr>';
+      // Roadmap: color first column by phase
+      const rowHtml = cells.map((c,ci) => {
+        let style = `padding:6px 9px;border:1px solid #e2e8f0;${bg};text-align:left;`;
+        if(isRoadmap && ci===0 && ri>0){
+          const lc=c.toLowerCase();
+          if(lc.includes('0–6')||lc.includes('0-6')||lc.includes('quick')) style+=';background:#d1fae5;color:#065f46;font-weight:700';
+          else if(lc.includes('6–18')||lc.includes('6-18')) style+=';background:#dbeafe;color:#1e40af;font-weight:700';
+          else if(lc.includes('18')||lc.includes('mid')) style+=';background:#ede9fe;color:#5b21b6;font-weight:700';
+          else if(lc.includes('3–5')||lc.includes('3-5')||lc.includes('long')) style+=';background:#fef3c7;color:#92400e;font-weight:700';
+        }
+        return `<${tag} style="${style}">${inlineFormat(c)}</${tag}>`;
+      }).join('');
+      html += '<tr>' + rowHtml + '</tr>';
     });
     html += '</table></div>';
     out.push(html);
@@ -1734,7 +1764,7 @@ Question: ${q}`;
   try{
     const r=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
     });
     const raw=await r.text();
     let d;
@@ -1971,10 +2001,10 @@ const ITS_BLOCKS = {
   E1:{
     block:{ru:'Блок Е · Приоритет первого шага',en:'Block F · First Step Priority'},
     dim:'Все измерения / All dimensions',
-    ru:{q:'Если запустить один ИТ-проект в ближайшие 3–6 месяцев — что даст наибольший эффект для бизнеса и команды?',
-      opts:['Сотрудники перестанут терять заявки и инциденты — задачи будут под контролем (Service Desk)','Согласование документов займёт часы, а не недели — уберём почту и Excel из этого процесса','Руководство увидит ключевые показатели в реальном времени, без ожидания отчётов','Исчезнет ручная передача данных между двумя ключевыми системами — экономия времени каждый день','Сотрудники получат AI-ассистента для типовых запросов и работы с документами','Команда начнёт использовать инструменты, которые уже оплачены, но простаивают']},
-    en:{q:'If you could launch one IT project in the next 3–6 months — what would give the greatest impact for the business and team?',
-      opts:['Employees stop losing track of requests and incidents — full visibility with a Service Desk','Document approvals take hours instead of weeks — email and Excel removed from the process','Management sees key indicators in real time, no more waiting for reports','Manual data transfer between two key systems eliminated — time saved every day','Employees get an AI assistant for routine requests and document work','The team starts using tools already paid for but sitting idle']}
+    ru:{q:'Какую задачу вы хотели бы решить в первую очередь?',
+      opts:['Навести порядок с ИТ-заявками и инцидентами — всё в одном месте (Service Desk)','Ускорить согласование документов — убрать почту и Excel из этого процесса','Дать руководству доступ к актуальным данным без ожидания отчётов','Устранить ручную передачу данных между ключевыми системами','Внедрить AI-инструменты для автоматизации рутинных задач','Начать полноценно использовать то, что уже есть, но не работает']},
+    en:{q:'Which challenge would you most like to solve first?',
+      opts:['Get control of IT requests and incidents — everything in one place (Service Desk)','Speed up document approvals — remove email and Excel from the process','Give management access to current data without waiting for reports','Eliminate manual data transfer between key systems','Implement AI tools to automate routine tasks','Start fully using what already exists but is not working']}
   }
 };
 
@@ -2169,17 +2199,17 @@ async function itsGenerateStrategy(){
   const isRu = lang==='ru';
   const systemPrompt = isRu
     ? `Ты — ИТ-консультант в роли CIO / IT Strategy Consultant / Enterprise Architect / Digital Transformation Advisor.
-Разработай краткую практическую ИТ-стратегию. Правила:
+Разработай практическую ИТ-стратегию. Правила:
 1. Только конкретные действия. Глаголы: внедрить, автоматизировать, интегрировать, масштабировать, модернизировать, централизовать, стандартизировать, оптимизировать, мигрировать, развернуть.
 2. Запрещено: «развивать», «улучшать», «обеспечить» без конкретики.
-3. Строго следуй структуре и лимитам. Не превышай 1800 слов.
-4. Таблицы — компактные, текст в ячейках не более 10 слов.`
+3. Строго следуй структуре. Таблицы — компактные, текст в ячейках не более 10 слов.
+4. Стратегия сбалансирована: Run + Grow + Transform.`
     : `You are an IT consultant acting as CIO / IT Strategy Consultant / Enterprise Architect / Digital Transformation Advisor.
-Develop a concise practical IT strategy. Rules:
+Develop a practical IT strategy. Rules:
 1. Concrete actions only. Verbs: implement, automate, integrate, scale, modernize, centralize, standardize, optimize, migrate, deploy.
 2. No vague terms: no "develop", "improve", "ensure" without specifics.
-3. Strictly follow the structure and limits. Do not exceed 1800 words.
-4. Tables must be compact — max 10 words per cell.`;
+3. Strictly follow the structure. Tables must be compact — max 10 words per cell.
+4. Balanced strategy: Run + Grow + Transform.`;
 
   const userPrompt = isRu
     ? `=== РЕЗУЛЬТАТЫ DMA ===
@@ -2197,28 +2227,31 @@ ${dimBlock}
 === РЕЗУЛЬТАТЫ DISCOVERY INTERVIEW ===
 ${interviewBlock||'Интервью не проводилось.'}
 
-=== СТРУКТУРА ОТВЕТА (строго, кратко — не более 1800 слов) ===
+=== СТРУКТУРА ОТВЕТА ===
 
 ## EXECUTIVE SUMMARY
-2 предложения: текущий уровень и главная задача.
+3 предложения: уровень зрелости, главная проблема, цель стратегии.
 
 ## ИТ-ВИДЕНИЕ
-1–2 предложения: куда движется организация через 3 года.
+2 предложения: куда движется организация через 3 года.
 
 ## СТРАТЕГИЧЕСКИЕ НАПРАВЛЕНИЯ И ИНИЦИАТИВЫ
-Ровно 3 направления. Для каждого:
-**НАПРАВЛЕНИЕ N: НАЗВАНИЕ** (одна строка — цель направления)
+5 направлений. Для каждого:
+**НАПРАВЛЕНИЕ N: НАЗВАНИЕ** — одна строка: цель направления
 Таблица: Инициатива | Тип | Срок | Владелец | KPI | Ожидаемый результат
-Ровно 2–3 инициативы на направление. Типы: Run, Grow, Transform — обязательно все три присутствуют.
+3 инициативы на направление. Типы Run/Grow/Transform — все три обязательно присутствуют суммарно.
 Текст в ячейках — максимум 10 слов.
 
 ## ДОРОЖНАЯ КАРТА
-Quick Wins (0–6 мес): не более 3 пунктов одной строкой каждый
-Short-Term (6–18 мес): не более 3 пунктов
-Mid-Term / Long-Term: по 2 пункта
+Оформить как таблицу по периодам:
+Период | Инициативы
+0–6 мес (Quick Wins) | список через точку с запятой
+6–18 мес | список
+18–36 мес | список
+3–5 лет | список
 
 ## ДОЛГОСРОЧНОЕ ЦИФРОВОЕ ВИДЕНИЕ
-1–2 предложения.`
+2 предложения.`
     : `=== DMA RESULTS ===
 Industry: ${d.industry||'n/a'} | Size: ${d.size||'n/a'} | Role: ${d.role||'n/a'}
 DMA: ${d.score.toFixed(2)}/5.0 | Level: ${lvName} | Target: ${nextLv}
@@ -2234,33 +2267,36 @@ Drivers: ${(d.drivers||[]).join(', ')||'n/a'}
 === DISCOVERY INTERVIEW RESULTS ===
 ${interviewBlock||'Interview not conducted.'}
 
-=== RESPONSE STRUCTURE (strictly, max 1800 words) ===
+=== RESPONSE STRUCTURE ===
 
 ## EXECUTIVE SUMMARY
-2 sentences: current level and main challenge.
+3 sentences: maturity level, main problem, strategic goal.
 
 ## IT VISION
-1–2 sentences: where the organisation is heading in 3 years.
+2 sentences: where the organisation is heading in 3 years.
 
 ## STRATEGIC DIRECTIONS AND INITIATIVES
-Exactly 3 directions. For each:
-**DIRECTION N: NAME** (one line — goal of the direction)
+5 directions. For each:
+**DIRECTION N: NAME** — one line: goal of the direction
 Table: Initiative | Type | Timeline | Owner | KPI | Expected Result
-Exactly 2–3 initiatives per direction. Types: Run, Grow, Transform — all three must be present.
+3 initiatives per direction. Types Run/Grow/Transform — all three must be present across the strategy.
 Cell text — max 10 words each.
 
 ## ROADMAP
-Quick Wins (0–6 months): max 3 items, one line each
-Short-Term (6–18 months): max 3 items
-Mid-Term / Long-Term: 2 items each
+Format as a table by period:
+Period | Initiatives
+0–6 months (Quick Wins) | semicolon-separated list
+6–18 months | list
+18–36 months | list
+3–5 years | list
 
 ## LONG-TERM DIGITAL VISION
-1–2 sentences.`;
+2 sentences.`;
 
   try{
     const resp=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,system:systemPrompt,messages:[{role:'user',content:userPrompt}]})
     });
     const raw=await resp.text();
     let data;
@@ -2355,6 +2391,11 @@ function itsOpenPrintWindow(titleStr, bodyHtml){
     .roadmap-item{font-size:12px;color:#334155;padding:3px 0;border-bottom:1px dotted #e2e8f0}
     .roadmap-item:last-child{border-bottom:none}
     .ft{margin-top:28px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between}
+    .rm-table{width:100%;border-collapse:collapse;margin:10px 0 16px}
+    .rm-table th{background:#1e3a8a;color:#fff;padding:7px 10px;text-align:left;font-weight:700;font-size:11px}
+    .rm-table td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:11px;vertical-align:top}
+    .rm-table tr:nth-child(even) td{background:#f8fafc}
+    .rm-phase{font-weight:700;color:#0f766e;white-space:nowrap}
     @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:20px 28px}}
   </style></head><body>${bodyHtml}</body></html>`);
   w.document.close();
