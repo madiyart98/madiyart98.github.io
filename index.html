@@ -851,7 +851,8 @@ function calc(){
   if(tyTitle) tyTitle.textContent=ty.title;
   if(tyText) tyText.textContent=ty.text;
   // Store result data for export
-  window._exportData={score:ov,level:lv,dimScores:ds,dimNames:t.dn,recs:document.getElementById('ait')?document.getElementById('ait').innerText:'',barriers:s4.bar,drivers:s4.drv,lang,ans,s1,s4,s2t1,s2t2,t1avg,t2avg,tamDT,consentGiven};
+  const _s1c=lang==='ru'?ct.s1ru:{ind:"Your organization's industry",indO:['IT / Telecommunications','Finance / Banking','Industry (Mining and Metallurgical Complex, Energy, Manufacturing, Automotive)','Oil and Gas','Food Industry','Agriculture','Construction','Retail','Transportation / Logistics','Education & Science','Healthcare / Pharmacy','Other (specify)'],sz:'Organization size by number of employees',szO:['Less than 100','101–500','501–1000','1001–10,000','More than 10,000'],ro:'Your position / role in the organization',roO:['Business Owner','CEO / Chief Executive','Top Manager Responsible for IT and Digitalization (Deputy CEO, Member of the Management Board)','Director of IT / Digitalization / Information Security / Data','Head of IT (Infrastructure, Development, Support and Maintenance, Information Security, Data)','Other (specify position)']};
+  window._exportData={score:ov,level:lv,dimScores:ds,dimNames:t.dn,recs:document.getElementById('ait')?document.getElementById('ait').innerText:'',barriers:s4.bar,drivers:s4.drv,lang,ans,s1,s4,s2t1,s2t2,t1avg,t2avg,tamDT,consentGiven,industry:s1.ind!==null?_s1c.indO[s1.ind]||'—':'—',size:s1.sz!==null?_s1c.szO[s1.sz]||'—':'—',role:s1.ro!==null?_s1c.roO[s1.ro]||'—':'—'};
   // Update IT Strategy CTA language
   if(typeof itsUpdateLang==='function') itsUpdateLang();
 }
@@ -2466,7 +2467,7 @@ function itsPdfProtocol(){
   const body=`
     <div class="hbar"></div>
     <h1>${isRu?'Протокол Discovery Interview':'Discovery Interview Protocol'}</h1>
-    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  DMA: ${d.score.toFixed(2)}/5.0  ·  ${lvName}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}</div>
+    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}  ·  ${isRu?'Размер':'Size'}: ${d.size||'—'}  ·  ${isRu?'Роль':'Role'}: ${d.role||'—'}</div>
     <div style="margin-bottom:14px">
       <span class="chip">DMA: ${d.score.toFixed(2)}</span>
       <span class="chip">${lvName}</span>
@@ -2493,7 +2494,7 @@ function itsPdfStrategy(){
   const body=`
     <div class="hbar"></div>
     <h1>${isRu?'ИТ-стратегия':'IT Strategy'}</h1>
-    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}  ·  ${isRu?'Размер':'Size'}: ${d.size||'—'}</div>
+    <div class="meta">${isRu?'Дата':'Date'}: ${date}  ·  ${isRu?'Отрасль':'Industry'}: ${d.industry||'—'}  ·  ${isRu?'Размер':'Size'}: ${d.size||'—'}  ·  ${isRu?'Роль':'Role'}: ${d.role||'—'}</div>
     <div style="margin-bottom:16px">
       <span class="chip">DMA: ${d.score.toFixed(2)}</span>
       <span class="chip">${lvName}</span>
