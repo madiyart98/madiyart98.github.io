@@ -1734,7 +1734,7 @@ Question: ${q}`;
   try{
     const r=await fetch('https://dark-base-9669.aizhir-mt.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200000,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,system:systemPrompt,messages:[{role:'user',content:contextStr}]})
     });
     const raw=await r.text();
     let d;
